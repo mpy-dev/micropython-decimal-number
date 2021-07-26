@@ -2,6 +2,7 @@ import sys
 import random
 from mpy_decimal.mpy_decimal import *
 
+
 if sys.implementation.name == "cpython":
     import traceback
     import time
