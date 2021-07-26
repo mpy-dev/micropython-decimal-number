@@ -142,7 +142,6 @@ def print_title(title: str) -> None:
     print(line)
 
 
-
 print_title("SYSTEM INFORMATION")
 system_machine_info()
 print_title("PERFORMANCE OF DecimalNumber")
