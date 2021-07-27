@@ -22,7 +22,6 @@ class DecimalNumber:
             self._num_decimals: int = decimals
         else:
             raise DecimalNumberExceptionMathDomainError("__init__: the number of decimals must be positive")
-        self._eliminate_decimal_trailing_zeros()
         self._reduce_to_scale()
 
     @staticmethod
@@ -121,9 +120,7 @@ class DecimalNumber:
         n._number = num_integer
         n._num_decimals = ((self._num_decimals + additional_decimals) // 2) + DecimalNumber._scale
         #print(num_integer, n._num_decimals, n)
-        n._eliminate_decimal_trailing_zeros()
         n._reduce_to_scale()
-
         return n
 
     @staticmethod
@@ -210,7 +207,6 @@ class DecimalNumber:
         new_number = DecimalNumber(c_all, max_decimals)
         new_number._is_positive = c_is_positive
 
-        new_number._eliminate_decimal_trailing_zeros()
         new_number._reduce_to_scale()
 
         return new_number
@@ -265,6 +261,34 @@ class DecimalNumber:
         self._num_decimals = n._num_decimals
         self._is_positive = n._is_positive
         return self
+
+    def __pow__(self, other: int) -> "DecimalNumber":
+        # Exponentition by squaring: https://en.wikipedia.org/wiki/Exponentiation_by_squaring
+        e: int = other
+        x = self.clone()
+        x._is_positive = True
+        if other == 0:
+            return 1
+        scale: int = DecimalNumber._scale
+        DecimalNumber.set_scale(DecimalNumber._scale + 9)   # extra digits for intermediate steps
+        if other < 0:
+            x = DecimalNumber(1) / x
+            other = -other
+        y = DecimalNumber(1)
+        while other > 1:
+            if (other % 2) == 0:
+                x *= x
+                other //= 2
+            else:
+                y *= x
+                x *= x
+                other = (other - 1) / 2
+        x *= y
+        DecimalNumber.set_scale(scale)
+        if not self._is_positive and (e % 2) == 1:
+            return -x
+        else:
+            return +x
 
     def __neg__(self) -> "DecimalNumber":
         n = self.clone()
@@ -424,11 +448,55 @@ class DecimalNumber:
             self._num_decimals -= 1
 
     def _reduce_to_scale(self) -> None:
-        if self._number == 0 and not self._is_positive:
-            self._is_positive = True
+        # if self._num_decimals > DecimalNumber._scale:
+        #     n = self._number if self._is_positive else -self._number
+        #     s: int = self._num_decimals - DecimalNumber._scale
+        #     d: int = 10 ** s
+        #     n = round(n, -s)
+        #     self._number = n // d
+        #     self._num_decimals = DecimalNumber._scale
+        # if self._number == 0 and not self._is_positive: # Prevents -0
+        #     self._is_positive = True
+
         if self._num_decimals > DecimalNumber._scale:
-            self._number //= 10 ** (self._num_decimals - DecimalNumber._scale)
+            # Round half to even: https://en.wikipedia.org/wiki/Rounding#Round_half_to_even
+
+            # Example:
+            #   scale = 3
+            #   Number: 123.456789
+            #   n = 123456789, decimals = 6
+            #   It should be  123.457 ;  n = 123457, decimals = scale = 3
+
+            n: int = self._number
+            s: int = self._num_decimals - DecimalNumber._scale  # s: 6 - 3 = 3
+            ds: int = (10 ** s)
+
+            v: int = n % (ds * 10)  # v: n % 10**4 =  6789      1000
+            b: int = v % ds         # b: v % 10**3 =   789
+            a: int = v // ds        # a: v // 10**3 = 6
+            m: int = ds // 2        # m: 10**3 // 2 = 500 (to be compared to b)
+
+            if (a % 2) == 1:        # Calculating differences to get to the nearest even
+                if b < m:
+                    x: int = -b
+                else:
+                    x: int = ds - b
+            else:
+                if b <= m:
+                    x: int = -b
+                else:
+                    x: int = ds - b
+
+            self._number = (n + x) // ds
             self._num_decimals = DecimalNumber._scale
+    
+        self._eliminate_decimal_trailing_zeros()
+
+        if self._number == 0 and not self._is_positive: # Prevents -0
+            self._is_positive = True
+
+
+
 
 
 class DecimalNumberException(Exception):
