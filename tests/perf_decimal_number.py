@@ -102,6 +102,15 @@ def perf_decimal_number() -> None:
     t = get_time_ms() - t
     print("{:<30}".format("Square root abs(n1):"), t / iteration_limit, "ms")
 
+    # Power
+    n = DecimalNumber.from_string("1.01234567")
+    e: int = 15
+    t = get_time_ms()
+    for _ in range(0, iteration_limit):
+        n3 = n ** e
+    t = get_time_ms() - t
+    print("{:<30}".format("Power: 1.01234567 ** 15"), t / iteration_limit, "ms")
+
     # Creation from integer
     n = n1._number
     d = n1._num_decimals
