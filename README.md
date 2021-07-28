@@ -12,7 +12,7 @@ The module **mpy_decimal** defines the class **DecimalNumber** that contains all
         decimals = 8
         positive = False
 
-The precision of **DecimalNumber** is mainly limited by available memory and procesing power. **DecimalNumber** uses the concept **scale**, which is the number of decimal places that the class uses for its numbers and operations. The concept is similar to the calculator an language [*bc*](https://www.gnu.org/software/bc/manual/html_mono/bc.html).  The default value for **scale** is 16. It is a global value of the class that can be changed at any time. For rounding, **DecimalNumber** uses [*round half to even*](https://en.wikipedia.org/wiki/Rounding#Round_half_to_even).
+The precision of **DecimalNumber** is mainly limited by available memory and procesing power. **DecimalNumber** uses the concept **scale**, which is the number of decimal places that the class uses for its numbers and operations. The concept is similar to the use of 'scale' in the calculator an language [*bc*](https://www.gnu.org/software/bc/manual/html_mono/bc.html){:target="_blank"}.  The default value for **scale** is 16. It is a global value of the class that can be changed at any time. For rounding, **DecimalNumber** uses [*round half to even*](https://en.wikipedia.org/wiki/Rounding#Round_half_to_even).
 
 ## Performance ##
 
@@ -114,7 +114,5 @@ Micropython can be used to display information on a display with limited charact
 
 
 
-
-## Available operations and functions
 
 ## Limitations
