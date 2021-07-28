@@ -1,6 +1,6 @@
 import sys
 import random
-from mpy_decimal import *
+from mpy_decimal.mpy_decimal import *
 
 # Imports modules and it sets limits depending on the implementation
 if sys.implementation.name == "cpython":
