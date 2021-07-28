@@ -11,19 +11,26 @@ if sys.implementation.name == "micropython":
 class TestDecimalNumber():
 
     def __init__(self) -> None:
+        """Initializes TestDecimalNumber, creating a counter for the tests run"""
         self.test_counter: int = 0
 
     def assertRaises(self, exc, function) -> None:
+        """Method to assert that an exception is raised.
+        It takes as parameters de Exception expected to occur an a function to be executed.
+        """
         try:
             function()
-            return False
+            return False        # Exception not raised
         except Exception as e:
             if isinstance(e, exc):
-                return True
+                return True     # Expected exception raised
             else:
-                return False
+                return False    # Other exception raised
 
     def assertEqual(self, v1, v2, message: str) -> bool:
+        """Assert that parameters v1 and v2 are equal.
+        It prints the message provided as parameter in case v1 and v2 are not equal.
+        """
         if v1 == v2:
             return True
         else:
@@ -31,6 +38,9 @@ class TestDecimalNumber():
             return False
 
     def assertTrue(self, v, message: str) -> bool:
+        """Assert that parameter v is True.
+        It prints the message provided as parameter in case v is not true.
+        """
         if v:
             return True
         else:
@@ -38,6 +48,9 @@ class TestDecimalNumber():
             return False
 
     def assertFalse(self, v, message: str) -> bool:
+        """Assert that parameter v is False.
+        It prints the message provided as parameter in case v is not false.
+        """
         if not v:
             return True
         else:
@@ -45,6 +58,9 @@ class TestDecimalNumber():
             return False
 
     def test_init(self) -> bool:
+        """Tests that method __init__() method works correctly.
+        It tests that a negative number of decimals raises an Exception.
+        """
         self.test_counter += 1
         failed: bool = False
         # Creation of a number with negative number of decimals
@@ -53,6 +69,9 @@ class TestDecimalNumber():
         return failed
 
     def test_parse_number(self) -> bool:
+        """Tests that method _parse_number() works correctly.
+        This method tests if a string containing a DecimalNumber number is valid.
+        """
         self.test_counter += 1
         failed: bool = False
         # Parsing a string to create a number
@@ -73,6 +92,11 @@ class TestDecimalNumber():
         return failed
 
     def test_from_string(self) -> bool:
+        """Tests that method _from_string() of DecimalNumber works correctly.
+        It tests that the number is parsed as valid a the Decimal Number is created.
+        The list of valid number should not raised and exception.
+        The list of invalid numbers a tested for a "parse error' exception.
+        """
         self.test_counter += 1
         failed: bool = False
         # Parsing a string to create a number
@@ -91,6 +115,9 @@ class TestDecimalNumber():
         return failed
 
     def test_set_scale(self) -> bool:
+        """Tests that method set_scale() of DecimalNumber works correctly.
+        It tests that the scale of the class that is set is the same as the scale that can be got.
+        """
         self.test_counter += 1
         failed: bool = False
         # scale must be positive
@@ -107,6 +134,11 @@ class TestDecimalNumber():
         return failed
 
     def test_square_root(self) -> bool:
+        """Tests that method square_root() of DecimalNumber works correctly.
+        It processes a list of numbers with their corresponding scale.
+        Calculates their square root using the scale specified and test the known result.
+        Also, it checks that the square root of a negative number raises an exception.
+        """
         self.test_counter += 1
         failed: bool = False
         list_values = [  # scale, number, square root
@@ -132,6 +164,11 @@ class TestDecimalNumber():
         return failed
 
     def test_pi(self) -> bool:
+        """Tests that method pi() of DecimalNumber works correctly.
+        It tests it with scale = 100, meaning 100 decimals.
+        Pi with up to 100 decimals is precalculated. It tests that is returned correctly.
+        Pi with 200 decimals is calculated and checked.
+        """
         self.test_counter += 1
         failed: bool = False
         # PI with 100 decimals is already calculated. It is checked and the it is calculated with 200 decimals
@@ -154,6 +191,9 @@ class TestDecimalNumber():
         return failed
 
     def test_add_iadd(self) -> bool:
+        """Tests that methods __add__() and __iadd__() of DecimalNumber work correctly.
+        It tests a list of numbers and their known addition.
+        """
         list_numbers = [
             ("4533.04", "955.671", "5488.711"),
             ("-194.406", "-37893.4", "-38087.806"),
@@ -273,6 +313,9 @@ class TestDecimalNumber():
         return failed
 
     def test_sub_iub(self) -> bool:
+        """Tests that methods __sub__() and __isub__() of DecimalNumber work correctly.
+        It tests a list of numbers and their known subtraction.
+        """
         list_numbers = [
             ("4533.04", "955.671", "3577.369"),
             ("-194.406", "-37893.4", "37698.994"),
@@ -392,6 +435,9 @@ class TestDecimalNumber():
         return failed
 
     def test_mul_imul(self) -> bool:
+        """Tests that methods __mul__() and __imul__() of DecimalNumber work correctly.
+        It tests a list of numbers and their known multiplication.
+        """
         list_numbers = [
             ("4533.04", "955.671", "4332094.86984"),
             ("-194.406", "-37893.4", "7366704.3204"),
@@ -511,6 +557,10 @@ class TestDecimalNumber():
         return failed
 
     def test_truediv(self) -> bool:
+        """Tests that method __truediv__() of DecimalNumber works correctly.
+        It multiplies two numbers and test that the result divided by one of the numbers
+        return the other number.
+        """
         self.test_counter += 1
         failed: bool = False
         # Creates 100 random multiplications and checks them
@@ -539,6 +589,10 @@ class TestDecimalNumber():
         return failed
 
     def test_itruediv(self) -> bool:
+        """Tests that method __itruediv__() of DecimalNumber works correctly.
+        It multiplies two numbers and test that the result divided by one of the numbers
+        return the other number.
+        """
         self.test_counter += 1
         failed: bool = False
         # Creates 10000 random divisions to itself and checks them
@@ -564,6 +618,9 @@ class TestDecimalNumber():
         return failed
 
     def test_neg(self) -> bool:
+        """Tests that method __neg__() of DecimalNumber works correctly.
+        Given a number n, it tests that -n returns the correct result.
+        """
         self.test_counter += 1
         failed: bool = False
         n = DecimalNumber(12345)
@@ -573,6 +630,9 @@ class TestDecimalNumber():
         return failed
 
     def test_pos(self) -> bool:
+        """Tests that method __pos__() of DecimalNumber works correctly.
+        Given a number n, it tests that +n returns the correct result.
+        """
         self.test_counter += 1
         failed: bool = False
         n = DecimalNumber(-12345)
@@ -582,6 +642,9 @@ class TestDecimalNumber():
         return failed
 
     def test_abs(self) -> bool:
+        """Tests that method __abs__() of DecimalNumber works correctly.
+        It tests that abs(n), being n either negative or positive, returns +n.
+        """
         self.test_counter += 1
         failed: bool = False
         n = DecimalNumber(12345)
@@ -595,6 +658,11 @@ class TestDecimalNumber():
         return failed
 
     def test_compare(self) -> bool:
+        """Tests that methods:
+        __lt__(), __le__(), __eq__(), __ne__(), __ge__(), __gt__()
+        of DecimalNumber works correctly.
+        Two numbers are created and they are compare for: <, <=, ==, !=, >=, >
+        """
         self.test_counter += 1
         failed: bool = False
         n1 = DecimalNumber.from_string("12.3")
@@ -648,6 +716,11 @@ class TestDecimalNumber():
         return failed
 
     def test_to_string_thousands(self) -> bool:
+        """Tests that method _to_string_thousands() of DecimalNumber works correctly.
+        Indirectly, it checks __str__() also.
+        It tests a list of numbers and their corresponding representation separating
+        the thousands with ','.
+        """
         self.test_counter += 1
         failed: bool = False
         list_numbers = [
@@ -671,6 +744,10 @@ class TestDecimalNumber():
         return failed
 
     def test_to_string_max_length(self) -> bool:
+        """Tests that method __to_string_max_length() of DecimalNumber works correctly.
+        That functions limits the length of the string returned.
+        It tests a list of numbers and their known conversion.
+        """
         self.test_counter += 1
         failed: bool = False
         list_numbers = [
@@ -701,6 +778,9 @@ class TestDecimalNumber():
         return failed
 
     def test_make_integer_comparable(self) -> bool:
+        """Tests that method _make_integercomparable() of DecimalNumber works correctly.
+        It tests a list of numbers and their known conversions needed for comparison.
+        """
         self.test_counter += 1
         failed: bool = False
         list_numbers = [
@@ -721,6 +801,11 @@ class TestDecimalNumber():
         return failed
 
     def test_reduce_to_scale(self) -> bool:
+        """Tests that method __reduce_to_scale() of DecimalNumber works correctly.
+        That functions reduces, if needed, the number of decimals of a number to
+        not to be greater than the scale of DecimalNumber class.
+        It tests a list of numbers and their known reduction.
+        """
         self.test_counter += 1
         failed: bool = False
         list_numbers = [    # reduced_scale, number, reduced_number
@@ -772,6 +857,27 @@ class TestDecimalNumber():
             (3, "-123.1", "-123.1"),
             (3, "-123.12", "-123.12"),
             (3, "-123.123", "-123.123"),
+            (0, "1.1", "1"),
+            (0, "1.2", "1"),
+            (0, "1.3", "1"),
+            (0, "1.4", "1"),
+            (0, "1.5", "2"),
+            (0, "1.6", "2"),
+            (0, "1.7", "2"),
+            (0, "1.8", "2"),
+            (0, "1.9", "2"),
+            (0, "2.0", "2"),
+            (0, "2.1", "2"),
+            (0, "2.2", "2"),
+            (0, "2.3", "2"),
+            (0, "2.4", "2"),
+            (0, "2.5", "2"),
+            (0, "2.6", "3"),
+            (0, "2.7", "3"),
+            (0, "2.8", "3"),
+            (0, "2.9", "3"),
+            (0, "3.0", "3"),
+            (0, "3.1", "3")
 
         ]
         current_scale = DecimalNumber.get_scale()
@@ -781,7 +887,8 @@ class TestDecimalNumber():
             n1 = DecimalNumber.from_string(n[1])
             if not self.assertTrue(
                 str(n1) == n[2],
-                "Error in _reduce_to_scale for numbers {0} and {1}; {2} != {3}".format(n[1], n[2], n1, n[2])
+                "Error in _reduce_to_scale for numbers {0} and {1}; {2} != {3}".format(
+                    n[1], n[2], n1, n[2])
             ):
                 failed = True
         DecimalNumber.set_scale(current_scale)
@@ -789,6 +896,10 @@ class TestDecimalNumber():
         return failed
 
     def test_pow(self) -> bool:
+        """Tests that method __pow__() of DecimalNumber works correctly.
+        It tests a list of numbers and exponents by calculating number ** exponent
+        and checking the expected result.
+        """
         self.test_counter += 1
         failed: bool = False
         list_numbers = [    # base, exponent, result
@@ -841,7 +952,8 @@ class TestDecimalNumber():
             r = n1 ** e
             if not self.assertTrue(
                 n[2] == str(r),
-                "Error in power (n ** e) for n = {0} and e = {1}; {2} != {3}".format(n1, e, r, n[2])
+                "Error in power (n ** e) for n = {0} and e = {1}; {2} != {3}".format(
+                    n1, e, r, n[2])
             ):
                 failed = True
 
@@ -871,12 +983,12 @@ class TestDecimalNumber():
 if __name__ == "__main__":
     print("Testing the module 'decimal_number':")
 
-    test = TestDecimalNumber()
-    failed_counter: int = 0
-    for k, v in TestDecimalNumber.__dict__.items():
+    test = TestDecimalNumber()                                  # Creates an object of the class for tests
+    failed_counter: int = 0                                     # Counts the number of tests that fail
+    for k, v in TestDecimalNumber.__dict__.items():             # Iterates through the items to find methods 'test_...'
         if k.startswith("test_") and callable(v):
             print("Testing: ", k)
-            failed: bool = TestDecimalNumber.__dict__[k](test)
+            failed: bool = TestDecimalNumber.__dict__[k](test)  # Executes the test
             if failed:
                 failed_counter += 1
 
@@ -887,4 +999,3 @@ if __name__ == "__main__":
         print("Result: 1 test failed")
     else:
         print("Result: {0} tests failed".format(failed_counter))
-

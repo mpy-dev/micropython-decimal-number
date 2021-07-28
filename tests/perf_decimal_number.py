@@ -2,6 +2,7 @@ import sys
 import random
 from mpy_decimal.mpy_decimal import *
 
+# Imports modules and it sets limits depending on the implementation
 if sys.implementation.name == "cpython":
     import traceback
     import time
@@ -17,6 +18,7 @@ line: str = '+' + ('-' * 63) + '+'
 
 
 def system_machine_info() -> None:
+    """It prints system information."""
     print("{:<30}".format("Implementation name:"), sys.implementation.name)
     print("{:<30}".format("Implementation version:"),
           "{0}.{1}.{2}".format(
@@ -32,6 +34,8 @@ def system_machine_info() -> None:
 
 
 def get_time_ms() -> int:
+    """It gets the time in miliseconds.
+    The way to get it depends on the implementation."""
     if sys.implementation.name == "cpython":
         return round(time.time() * 1000)
     if sys.implementation.name == "micropython":
@@ -39,10 +43,11 @@ def get_time_ms() -> int:
 
 
 def gen_random_number() -> DecimalNumber:
-    # generates a random number with a number of decimals equal to scale.
-    # The number of digits for the integer part is between scale/2 and scale.
-    # It can be either positive or negative.
-    # Use abs(gen_random_number()) for postive numbers only
+    """Generates a random number with a number of decimals equal to scale.
+    The number of digits for the integer part is between scale/2 and scale.
+    It can be either positive or negative.
+    abs(gen_random_number()) can be used for postive numbers only.
+    """
     n: int = 0
     length: int = DecimalNumber.get_scale(
     ) + random.randrange(DecimalNumber.get_scale() // 2, DecimalNumber.get_scale())
@@ -54,6 +59,7 @@ def gen_random_number() -> DecimalNumber:
 
 
 def perf_decimal_number() -> None:
+    """Performance calculations of DecimalNumber class"""
     print("{:<30}".format("Scale (max. decimals):"), DecimalNumber.get_scale())
     print("{:<30}".format("Iterations per test:"), iteration_limit)
 
@@ -131,6 +137,7 @@ def perf_decimal_number() -> None:
 
 
 def perf_decimal_number_pi() -> None:
+    """Performance of the calculation of PI."""
     # Calculating PI
     # PI is precalculated up to 100 decimals.
     # We need to set scale > 100 to actually calculated.
@@ -145,11 +152,11 @@ def perf_decimal_number_pi() -> None:
 
 
 def print_title(title: str) -> None:
+    """Auxiliary function to print a title."""
     print("")
     print(line)
     print("|  " + "{:<59}".format(title) + "  |")
     print(line)
-
 
 
 print_title("SYSTEM INFORMATION")

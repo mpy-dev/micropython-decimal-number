@@ -5,6 +5,7 @@ if sys.implementation.name == "cpython":        # micropython does not include '
 if sys.implementation.name == "micropython":    # Just in case...
     pass
 
+
 class DecimalNumber:
     VERSION = "v1.00 - July 2021"
     DEFAULT_SCALE: int = 16
@@ -15,20 +16,23 @@ class DecimalNumber:
     PI_SCALE: int = 100
     _scale: int = DEFAULT_SCALE
 
-    def __init__(self, number: int = 0, decimals = 0) -> None:
+    def __init__(self, number: int = 0, decimals=0) -> None:
         self._is_positive: bool = (number >= 0)
         self._number: int = number if number >= 0 else -number
         if decimals >= 0:
             self._num_decimals: int = decimals
         else:
-            raise DecimalNumberExceptionMathDomainError("__init__: the number of decimals must be positive")
+            raise DecimalNumberExceptionMathDomainError(
+                "__init__: the number of decimals must be positive")
         self._reduce_to_scale()
 
     @staticmethod
     def from_string(number: str) -> "DecimalNumber":
-        correct, integer_number, num_decimals = DecimalNumber._parse_number(number)
+        correct, integer_number, num_decimals = DecimalNumber._parse_number(
+            number)
         if not correct:
-            raise DecimalNumberExceptionParseError("Syntax error parsing '{0}'".format(number))
+            raise DecimalNumberExceptionParseError(
+                "Syntax error parsing '{0}'".format(number))
         else:
             n = DecimalNumber(integer_number, num_decimals)
         return n
@@ -38,10 +42,11 @@ class DecimalNumber:
         if num_digits >= 0:
             DecimalNumber._scale = num_digits
         else:
-            raise DecimalNumberExceptionMathDomainError("set_scale: scale must be positive")
+            raise DecimalNumberExceptionMathDomainError(
+                "set_scale: scale must be positive")
 
     @staticmethod
-    def _parse_number(number: str) -> Tuple[bool, int, int]: # True: correct
+    def _parse_number(number: str) -> Tuple[bool, int, int]:  # True: correct
         # Note: this is faster than regular expressions
         #   and, also, this regular expression generates and
         #   exception when the string "number" is long.
@@ -62,8 +67,9 @@ class DecimalNumber:
                     position += 1
                 step = 2
             elif step == 2:
-                if digits.find(number[position]) != -1: # [0-9]+
-                    integer_number = integer_number * 10 + int(number[position])
+                if digits.find(number[position]) != -1:  # [0-9]+
+                    integer_number = integer_number * \
+                        10 + int(number[position])
                     position += 1
                     last_valid = position
                 else:
@@ -74,8 +80,9 @@ class DecimalNumber:
                     last_valid = position
                 step = 4
             elif step == 4:
-                if digits.find(number[position]) != -1: # [0-9]*
-                    integer_number = integer_number * 10 + int(number[position])
+                if digits.find(number[position]) != -1:  # [0-9]*
+                    integer_number = integer_number * \
+                        10 + int(number[position])
                     num_decimals += 1
                     position += 1
                     last_valid = position
@@ -107,7 +114,8 @@ class DecimalNumber:
     def square_root(self) -> "DecimalNumber":
         n = DecimalNumber()
         if not self._is_positive:
-            raise DecimalNumberExceptionMathDomainError("No square root for negative numbers")
+            raise DecimalNumberExceptionMathDomainError(
+                "No square root for negative numbers")
 
         num_integer: int = self._number
         num_integer *= (10 ** (DecimalNumber._scale * 2))
@@ -115,10 +123,11 @@ class DecimalNumber:
         if (self._num_decimals % 2) == 1:
             num_integer *= 10
             additional_decimals = 1
-    
+
         num_integer = DecimalNumber._isqrt(num_integer)
         n._number = num_integer
-        n._num_decimals = ((self._num_decimals + additional_decimals) // 2) + DecimalNumber._scale
+        n._num_decimals = (
+            (self._num_decimals + additional_decimals) // 2) + DecimalNumber._scale
         #print(num_integer, n._num_decimals, n)
         n._reduce_to_scale()
         return n
@@ -131,7 +140,8 @@ class DecimalNumber:
         else:
             # Calculates PI
             scale: int = DecimalNumber._scale
-            DecimalNumber.set_scale(DecimalNumber._scale + 4)   # extra digits for intermediate steps
+            # extra digits for intermediate steps
+            DecimalNumber.set_scale(DecimalNumber._scale + 4)
             lasts = DecimalNumber(0)
             t = DecimalNumber(3)
             s = DecimalNumber(3)
@@ -198,11 +208,12 @@ class DecimalNumber:
         a_all: int = a_integer * c_factor + a_decimals
         b_all: int = b_integer * c_factor + b_decimals
 
-        c_all: int = (a_all if self._is_positive else -a_all) + (b_all if other._is_positive else -b_all)
+        c_all: int = (a_all if self._is_positive else -a_all) + \
+            (b_all if other._is_positive else -b_all)
         c_is_positive: bool = (c_all > 0)
         if c_all < 0:
             c_all = -c_all
-        
+
         #print(a_all, b_all, c_all)
         new_number = DecimalNumber(c_all, max_decimals)
         new_number._is_positive = c_is_positive
@@ -234,7 +245,8 @@ class DecimalNumber:
         a_integer: int = self._number if self._is_positive else -self._number
         b_integer: int = other._number if other._is_positive else -other._number
         c_integer: int = a_integer * b_integer
-        new_number = DecimalNumber(c_integer, self._num_decimals + other._num_decimals)
+        new_number = DecimalNumber(
+            c_integer, self._num_decimals + other._num_decimals)
         return new_number
 
     def __imul__(self, other: "DecimalNumber") -> "DecimalNumber":
@@ -250,7 +262,8 @@ class DecimalNumber:
         if b_integer != 0:
             c_factor: int = 10 ** (DecimalNumber._scale + 2)
             c_integer: int = (a_integer * c_factor) // b_integer
-            new_number = DecimalNumber(c_integer, self._num_decimals - other._num_decimals + (DecimalNumber._scale + 2))
+            new_number = DecimalNumber(
+                c_integer, self._num_decimals - other._num_decimals + (DecimalNumber._scale + 2))
         else:
             raise DecimalNumberExceptionDivisionByZeroError("Division by zero")
         return new_number
@@ -270,7 +283,8 @@ class DecimalNumber:
         if other == 0:
             return 1
         scale: int = DecimalNumber._scale
-        DecimalNumber.set_scale(DecimalNumber._scale + 9)   # extra digits for intermediate steps
+        # extra digits for intermediate steps
+        DecimalNumber.set_scale(DecimalNumber._scale + 9)
         if other < 0:
             x = DecimalNumber(1) / x
             other = -other
@@ -342,13 +356,16 @@ class DecimalNumber:
         #   12345 / 6: 0.012345
         #   12345 / 7: 0.0012345
         #   12345 / 8: 0.00012345
-        str_number: str = str(self._number) if self._number >= 0 else str(-self._number)
+        str_number: str = str(
+            self._number) if self._number >= 0 else str(-self._number)
         if self._num_decimals != 0:
             num_digits: int = len(str_number)
             if self._num_decimals < num_digits:
-                str_number = str_number[:(num_digits - self._num_decimals)] + "." + str_number[-self._num_decimals:]
+                str_number = str_number[:(
+                    num_digits - self._num_decimals)] + "." + str_number[-self._num_decimals:]
             else:
-                str_number = "0" + "." + ("0" * (self._num_decimals - num_digits)) + str_number
+                str_number = "0" + "." + \
+                    ("0" * (self._num_decimals - num_digits)) + str_number
 
         if thousands:
             pos_decimal: int = str_number.find(".")
@@ -374,7 +391,7 @@ class DecimalNumber:
         str_number = str_number.replace("#", DecimalNumber.DECIMAL_SEP)
 
         if not self._is_positive:
-            str_number =  "-" + str_number
+            str_number = "-" + str_number
 
         return str_number
 
@@ -407,7 +424,8 @@ class DecimalNumber:
                 # 123.34000
                 while str_number[-1:] == '0':
                     str_number = str_number[:-1]
-                if str_number[-1:] == '.':  # If the last character is a point, it can be deleted
+                # If the last character is a point, it can be deleted
+                if str_number[-1:] == '.':
                     str_number = str_number[:-1]
             if str_number == "-0":
                 str_number = "0"
@@ -489,18 +507,16 @@ class DecimalNumber:
 
             self._number = (n + x) // ds
             self._num_decimals = DecimalNumber._scale
-    
+
         self._eliminate_decimal_trailing_zeros()
 
-        if self._number == 0 and not self._is_positive: # Prevents -0
+        if self._number == 0 and not self._is_positive:  # Prevents -0
             self._is_positive = True
-
-
-
 
 
 class DecimalNumberException(Exception):
     pass
+
 
 class DecimalNumberExceptionParseError(DecimalNumberException):
     def __init__(self, *args: object) -> None:
@@ -515,6 +531,7 @@ class DecimalNumberExceptionParseError(DecimalNumberException):
         else:
             return "DecimalNumberExceptionParseError"
 
+
 class DecimalNumberExceptionMathDomainError(DecimalNumberException):
     def __init__(self, *args: object) -> None:
         if args:
@@ -528,6 +545,7 @@ class DecimalNumberExceptionMathDomainError(DecimalNumberException):
         else:
             return "DecimalNumberExceptionMathDomainError"
 
+
 class DecimalNumberExceptionDivisionByZeroError(DecimalNumberException):
     def __init__(self, *args: object) -> None:
         if args:
@@ -540,6 +558,7 @@ class DecimalNumberExceptionDivisionByZeroError(DecimalNumberException):
             return "DecimalNumberExceptionDivisionByZeroError: {0}".format(self.message)
         else:
             return "DecimalNumberExceptionDivisionByZeroError"
+
 
 if __name__ == "__main__":
     print("DecimalNumber module -", DecimalNumber.VERSION)
