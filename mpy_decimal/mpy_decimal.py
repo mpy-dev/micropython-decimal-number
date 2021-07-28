@@ -452,7 +452,7 @@ class DecimalNumber:
         return str_number
 
     def __repr__(self) -> str:
-        return "DecimalNumber(" + str(self) + ")"
+        return 'DecimalNumber("' + str(self) + '")'
 
     def to_int_truncate(self) -> int:
         return self._number // (10 ** self._num_decimals)
