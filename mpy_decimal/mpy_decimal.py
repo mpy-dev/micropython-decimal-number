@@ -27,20 +27,9 @@ class DecimalNumber:
                     "__init__: the number of decimals must be positive")
             self._reduce_to_scale()
         elif isinstance(number, str):
-            self.copy_from(DecimalNumber.from_string(number))
+            self.copy_from(DecimalNumber._from_string(number))
         else:
             raise DecimalNumberExceptionBadInit("Only 'int' or 'str' instances are allowed for initialization")
-
-    @staticmethod
-    def from_string(number: str) -> "DecimalNumber":
-        correct, integer_number, num_decimals = DecimalNumber._parse_number(
-            number)
-        if not correct:
-            raise DecimalNumberExceptionParseError(
-                "Syntax error parsing '{0}'".format(number))
-        else:
-            n = DecimalNumber(integer_number, num_decimals)
-        return n
 
     @staticmethod
     def set_scale(num_digits: int) -> None:
@@ -104,6 +93,17 @@ class DecimalNumber:
     def get_scale() -> int:
         return DecimalNumber._scale
 
+    @staticmethod
+    def _from_string(number: str) -> "DecimalNumber":
+        correct, integer_number, num_decimals = DecimalNumber._parse_number(
+            number)
+        if not correct:
+            raise DecimalNumberExceptionParseError(
+                "Syntax error parsing '{0}'".format(number))
+        else:
+            n = DecimalNumber(integer_number, num_decimals)
+        return n
+
     def clone(self) -> "DecimalNumber":
         n = DecimalNumber()
         n._number = self._number
@@ -141,7 +141,7 @@ class DecimalNumber:
     def pi() -> "DecimalNumber":
         # If it is precalculated
         if DecimalNumber.PI_SCALE >= DecimalNumber._scale:
-            return DecimalNumber.from_string(DecimalNumber.PI_NUMBER)
+            return DecimalNumber(DecimalNumber.PI_NUMBER)
         else:
             # Calculates PI
             scale: int = DecimalNumber._scale
@@ -575,7 +575,6 @@ class DecimalNumber:
 class DecimalNumberException(Exception):
     pass
 
-
 class DecimalNumberExceptionParseError(DecimalNumberException):
     def __init__(self, *args: object) -> None:
         if args:
@@ -614,7 +613,6 @@ class DecimalNumberExceptionMathDomainError(DecimalNumberException):
             return "DecimalNumberExceptionMathDomainError: {0}".format(self.message)
         else:
             return "DecimalNumberExceptionMathDomainError"
-
 
 class DecimalNumberExceptionDivisionByZeroError(DecimalNumberException):
     def __init__(self, *args: object) -> None:

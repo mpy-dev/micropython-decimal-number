@@ -108,10 +108,10 @@ class TestDecimalNumber():
             "1..4", "-", "1.-4", "--5", "0..", "12a345", "7O"
         ]
         for n in list_invalid:
-            if not self.assertRaises(DecimalNumberExceptionParseError, lambda: DecimalNumber.from_string(n)):
+            if not self.assertRaises(DecimalNumberExceptionParseError, lambda: DecimalNumber(n)):
                 failed = True
         for n in list_valid:
-            number = DecimalNumber.from_string(n)
+            number = DecimalNumber(n)
         return failed
 
     def test_set_scale(self) -> bool:
@@ -154,7 +154,7 @@ class TestDecimalNumber():
         for n in list_values:
             current_scale: int = DecimalNumber.get_scale()
             DecimalNumber.set_scale(int(n[0]))
-            sr = str(DecimalNumber.from_string(n[1]).square_root())
+            sr = str(DecimalNumber(n[1]).square_root())
             if not self.assertEqual(sr, n[2], "Error calculating square_root({0})".format(n[1])):
                 failed = True
             DecimalNumber.set_scale(current_scale)
@@ -299,11 +299,11 @@ class TestDecimalNumber():
         self.test_counter += 1
         failed: bool = False
         for n in list_numbers:
-            a = DecimalNumber.from_string(n[0])
-            b = DecimalNumber.from_string(n[1])
-            c = DecimalNumber.from_string(n[2])
+            a = DecimalNumber(n[0])
+            b = DecimalNumber(n[1])
+            c = DecimalNumber(n[2])
             cc = a + b
-            aa = DecimalNumber.from_string(n[0])
+            aa = DecimalNumber(n[0])
             aa += b
 
             if not self.assertEqual(c, cc, "Incorrect addition for ({0} + {1})".format(str(a), str(b))):
@@ -421,11 +421,11 @@ class TestDecimalNumber():
         self.test_counter += 1
         failed: bool = False
         for n in list_numbers:
-            a = DecimalNumber.from_string(n[0])
-            b = DecimalNumber.from_string(n[1])
-            c = DecimalNumber.from_string(n[2])
+            a = DecimalNumber(n[0])
+            b = DecimalNumber(n[1])
+            c = DecimalNumber(n[2])
             cc = a - b
-            aa = DecimalNumber.from_string(n[0])
+            aa = DecimalNumber(n[0])
             aa -= b
 
             if not self.assertEqual(c, cc, "Incorrect subtruction for ({0} - {1})".format(str(a), str(b))):
@@ -543,11 +543,11 @@ class TestDecimalNumber():
         self.test_counter += 1
         failed: bool = False
         for n in list_numbers:
-            a = DecimalNumber.from_string(n[0])
-            b = DecimalNumber.from_string(n[1])
-            c = DecimalNumber.from_string(n[2])
+            a = DecimalNumber(n[0])
+            b = DecimalNumber(n[1])
+            c = DecimalNumber(n[2])
             cc = a * b
-            aa = DecimalNumber.from_string(n[0])
+            aa = DecimalNumber(n[0])
             aa *= b
 
             if not self.assertEqual(c, cc, "Incorrect multiplication for ({0} - {1})".format(str(a), str(b))):
@@ -578,8 +578,8 @@ class TestDecimalNumber():
                     b = -b
                 zero = (b == 0.0)
 
-            aa = DecimalNumber.from_string(str(a))
-            bb = DecimalNumber.from_string(str(b))
+            aa = DecimalNumber(str(a))
+            bb = DecimalNumber(str(b))
             cc = aa * bb
 
             aa2 = cc / bb
@@ -607,8 +607,8 @@ class TestDecimalNumber():
             if random.randrange(0, 2) == 0:
                 b = -b
 
-            aa = DecimalNumber.from_string(str(a))
-            bb = DecimalNumber.from_string(str(b))
+            aa = DecimalNumber(str(a))
+            bb = DecimalNumber(str(b))
             cc = aa * bb
             aa2 = cc.clone()
             aa2 /= bb
@@ -665,8 +665,8 @@ class TestDecimalNumber():
         """
         self.test_counter += 1
         failed: bool = False
-        n1 = DecimalNumber.from_string("12.3")
-        n2 = DecimalNumber.from_string("0.98765")
+        n1 = DecimalNumber("12.3")
+        n2 = DecimalNumber("0.98765")
 
         if not self.assertFalse(n1 < n2, "Error evaluating {0} < {1}".format(n1, n2)):
             failed = True
@@ -738,7 +738,7 @@ class TestDecimalNumber():
             ("1234567890.12345", "1,234,567,890.12345"),
         ]
         for n in list_numbers:
-            number = DecimalNumber.from_string(n[0])
+            number = DecimalNumber(n[0])
             if not self.assertEqual(n[1], number.to_string_thousands(), "Error in to_string_thousands"):
                 failed = True
         return failed
@@ -765,11 +765,11 @@ class TestDecimalNumber():
             ("123456789.123",   "Overflow"),
         ]
         for n in list_numbers:
-            number = DecimalNumber.from_string(n[0])
+            number = DecimalNumber(n[0])
             if not self.assertEqual(n[1], number.to_string_max_length(8), "Error in to_string_max_length"):
                 failed = True
         for n in list_numbers:
-            number = DecimalNumber.from_string('-'+n[0])
+            number = DecimalNumber('-'+n[0])
             result: str = n[1]
             if result != "0" and result != "Overflow":
                 result = '-' + result
@@ -789,8 +789,8 @@ class TestDecimalNumber():
             ("123.45", "123", 12345, 12300)
         ]
         for n in list_numbers:
-            n1 = DecimalNumber.from_string(n[0])
-            n2 = DecimalNumber.from_string(n[1])
+            n1 = DecimalNumber(n[0])
+            n2 = DecimalNumber(n[1])
             a, b = n1._make_integer_comparable(n1, n2)
             if not self.assertTrue(
                 n[2] == a and n[3] == b,
@@ -884,7 +884,7 @@ class TestDecimalNumber():
         for n in list_numbers:
             s: int = n[0]
             DecimalNumber.set_scale(s)
-            n1 = DecimalNumber.from_string(n[1])
+            n1 = DecimalNumber(n[1])
             if not self.assertTrue(
                 str(n1) == n[2],
                 "Error in _reduce_to_scale for numbers {0} and {1}; {2} != {3}".format(
@@ -947,7 +947,7 @@ class TestDecimalNumber():
         current_scale = DecimalNumber.get_scale()
         for n in list_numbers:
             DecimalNumber.set_scale(16)
-            n1 = DecimalNumber.from_string(n[0])
+            n1 = DecimalNumber(n[0])
             e: int = n[1]
             r = n1 ** e
             if not self.assertTrue(

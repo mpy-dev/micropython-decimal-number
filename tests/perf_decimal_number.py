@@ -1,6 +1,6 @@
 import sys
 import random
-from mpy_decimal.mpy_decimal import *
+from mpy_decimal import *
 
 # Imports modules and it sets limits depending on the implementation
 if sys.implementation.name == "cpython":
@@ -109,7 +109,7 @@ def perf_decimal_number() -> None:
     print("{:<30}".format("Square root abs(n1):"), t / iteration_limit, "ms")
 
     # Power
-    n = DecimalNumber.from_string("1.01234567")
+    n = DecimalNumber("1.01234567")
     e: int = 15
     t = get_time_ms()
     for _ in range(0, iteration_limit):
@@ -130,7 +130,7 @@ def perf_decimal_number() -> None:
     n = str(n1)
     t = get_time_ms()
     for _ in range(0, iteration_limit):
-        n3 = DecimalNumber.from_string(n)
+        n3 = DecimalNumber(n)
     t = get_time_ms() - t
     print("{:<30}".format("DecimalNumber from string:"),
           t / iteration_limit, "ms")
