@@ -5,7 +5,7 @@ The Python Standard Library contains the wonderful module [*decimal*](https://do
 
 ## Introduction
 
-The module **mpy_decimal** defines the class **DecimalNumber** that contains all the functionality for decimal floating point arithmetic. A **DecimalNumber** can be of arbitrary precision. Internally, it is composed of an *int* (built-in type of Python) that contains all the digits of the **DecimalNumber**, an *int* equal to the number of decimal places and a *bool* that determines whether the **DecimalNumber** is positive or negative. Example:
+The module **mpy_decimal** defines the class **DecimalNumber** that contains all the functionality for decimal floating point arithmetic. A **DecimalNumber** can be of arbitrary precision. Internally, it is composed of an *int* that contains all the digits of the **DecimalNumber**, an *int* equal to the number of decimal places and a *bool* that determines whether the **DecimalNumber** is positive or negative. Example:
 
     DecimalNumber: -12345678901.23456789
         number   = 1234567890123456789
@@ -16,7 +16,7 @@ The precision of **DecimalNumber** is mainly limited by available memory and pro
 
 ## Performance ##
 
-All the internal operations of **DecimalNumber** are done with integers (*int* built-in type of Python) and the number of decimals are adjusted according to the operation. It is fast, but not as fast as Python's *decimal* class because **DecimalNumber** is pure Python and *decimal* is written in C. The *test* folder contains the file "*perf_decimal_number.py*" that calculates the performance of **DecimalNumber** on the device it runs. This is the performance on a [*Raspberry Pi Pico*](https://www.raspberrypi.org/products/raspberry-pi-pico/), which for basic operations take about one millisecond with scale = 16:
+All the internal operations of **DecimalNumber** are done with integers (*int* built-in type of Python) and the number of decimals are adjusted according to the operation. It is fast, but not as fast as Python's *decimal* class because **DecimalNumber** is pure Python and *decimal* is written in C. The *test* folder contains the file "*perf_decimal_number.py*" that calculates the performance of **DecimalNumber** on the device it runs. This is the output of that program executed on a [*Raspberry Pi Pico*](https://www.raspberrypi.org/products/raspberry-pi-pico/). Basic operations take about one millisecond with scale = 16:
 
     +---------------------------------------------------------------+
     |  SYSTEM INFORMATION                                           |
