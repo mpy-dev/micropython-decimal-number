@@ -12,11 +12,11 @@ The module **mpy_decimal** defines the class **DecimalNumber** that contains all
         decimals = 8
         positive = False
 
-The precision of **DecimalNumber** is mainly limited by available memory and procesing power. **DecimalNumber** uses the concept **scale**, which is the number of decimal places that the class uses for its numbers and operations. The concept is similar to the use of 'scale' in the calculator an language <a href="https://www.gnu.org/software/bc/manual/html_mono/bc.html" target="_blank">*bc*</a>.  The default value for **scale** is 16. It is a global value of the class that can be changed at any time. For rounding, **DecimalNumber** uses [*round half to even*](https://en.wikipedia.org/wiki/Rounding#Round_half_to_even).
+The precision of **DecimalNumber** is mainly limited by available memory and procesing power. **DecimalNumber** uses the concept **scale**, which is the number of decimal places that the class uses for its numbers and operations. The concept is similar to the use of 'scale' in the calculator an language [*bc*](https://www.gnu.org/software/bc/manual/html_mono/bc.html).  The default value for **scale** is 16. It is a global value of the class that can be changed at any time. For rounding, **DecimalNumber** uses [*round half to even*](https://en.wikipedia.org/wiki/Rounding#Round_half_to_even).
 
 ## Performance ##
 
-All the internal operations of **DecimalNumber** are done with integers (*int* built-in type of Python) and the number of decimals are adjusted according to the operation. It is fast, but not as fast as Python's *decimal* class because **DecimalNumber** is pure Python and *decimal* is written in C. The *test* folder contains the file "*perf_decimal_number.py*" that calculates the performance of **DecimalNumber** on the device it runs. This is the output of that program executed on a [*Raspberry Pi Pico*](https://www.raspberrypi.org/products/raspberry-pi-pico/). Basic operations take about one millisecond with scale = 16:
+All the internal operations of **DecimalNumber** are done with integers (*int* built-in type of Python) and the number of decimals are adjusted according to the operation. It is fast, but not as fast as Python's *decimal* class because **DecimalNumber** is pure Python and *decimal* is written in C. The *test* folder contains the file "*perf_decimal_number.py*" that calculates the performance of **DecimalNumber** on the device where it runs. This is the output of that program executed on a [*Raspberry Pi Pico*](https://www.raspberrypi.org/products/raspberry-pi-pico/). Basic operations take about one millisecond with scale = 16:
 
     +---------------------------------------------------------------+
     |  SYSTEM INFORMATION                                           |
@@ -64,12 +64,14 @@ If you need (and can) run your code on both, a computer and a micropython board,
     if sys.implementation.name == "micropython":
         ... your imports or code for Micropython here ...
 
+(Note: 'sys' is standard Python and it has nothing to do with **DecimalNumber**)
+
 ### Initialization ###
-A number with default value, equal to zero:
+A **DecimalNumber** with default value, equal to zero:
 
     n = DecimalNumber()
 
-A integer, for example, 748:
+An integer, for example, 748:
 
     n = DecimalNumber(748)
 
@@ -99,13 +101,18 @@ The method **to_string_thousands()** of **DecimalNumber** returns a string with 
     print(n.to_string_thousands())
         Result: 93,402.5184
 
-Micropython can be used to display information on a display with limited characters. For example, on a 16x2 LCD (two lines of 16 characters). For these kind of cases exists the method **to_string_max_length**. It limits the representation of the number to a maximum length of characters. The minimum value is 8. If decimals cannot fit in, they are discarded. If the integer part of the number is bigger than the maximum length, the result is the string "Overflow". The decimal point is also considered. Some examples:
+Micropython can be used to print information on a display with limited characters. For example, on a 16x2 LCD (two lines of 16 characters). For these kind of cases exists the method **to_string_max_length**. It limits the representation of the number to a maximum length of characters, including '.' and '-'. The minimum value is 8. If decimals cannot fit in, they are discarded. If the integer part of the number is bigger than the maximum length, the result is the string "Overflow". Some examples:
 
+                                ¹¹¹¹
+                       ¹²³⁴⁵⁶⁷⁸⁹⁰¹²³ 
     n = DecimalNumber("123456789.012")
+
     print(n.to_string_max_length(12))
         Result: 123456789.01
+
     print(n.to_string_max_length(11))
         Result: 123456789
+
     print(n.to_string_max_length(8))
         Result: Overflow
 
