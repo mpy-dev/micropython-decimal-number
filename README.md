@@ -54,15 +54,15 @@ You can start by importing the module:
 
     from mpy_decimal.mpy_decimal import *
 
-If you need (and can) run your code on both, a computer and a micropython board, you will probably need to run different code depending of the device. You can do it this way:
+If you need (and can) run your code on both, a computer and a micropython board, you will probably need to run different code depending on the device. You can do it this way:
 
     import sys
 
     if sys.implementation.name == "cpython":
-        { your imports or code for CPython here}
+        ... your imports or code for CPython here ...
 
     if sys.implementation.name == "micropython":
-        { your imports or code for Micropython here}
+        ... your imports or code for Micropython here ...
 
 ### Initialization ###
 A number with default value, equal to zero:
@@ -73,7 +73,7 @@ A integer, for example, 748:
 
     n = DecimalNumber(748)
 
-A decimal number, for example, 93402.518:
+A decimal number, for example, 93402.5184:
 
     n = DecimalNumber(934025184, 4)
 
@@ -96,10 +96,10 @@ They can be converted to a string using 'str()':
 
 The method **to_string_thousands()** of **DecimalNumber** returns a string with the number formated with ',' as thousands separator. Decimals are not affected:
 
-    n.to_string_thousands()
+    print(n.to_string_thousands())
         Result: 93,402.5184
 
-Micropython can be used to display information on a display with limited characters. For example, on a 16x2 LCD (two lines of 16 characters). For these kind of cases exists the method **to_string_max_length**. It limits the representation of the number to a maximum length of characters. The minimum value is 8. If decimals cannot fit in, they are discarded. If the integer part of the number is bigger than the maximum length, the result is the string "Overflow". Some examples:
+Micropython can be used to display information on a display with limited characters. For example, on a 16x2 LCD (two lines of 16 characters). For these kind of cases exists the method **to_string_max_length**. It limits the representation of the number to a maximum length of characters. The minimum value is 8. If decimals cannot fit in, they are discarded. If the integer part of the number is bigger than the maximum length, the result is the string "Overflow". The decimal point is also considered. Some examples:
 
     n = DecimalNumber("123456789.012")
     print(n.to_string_max_length(12))
