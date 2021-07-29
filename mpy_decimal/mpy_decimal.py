@@ -12,7 +12,7 @@ class DecimalNumber:
     DECIMAL_SEP: str = "."
     THOUSANDS_SEP: str = ","
     USE_THOUSANDS_SEP: bool = False
-    PI_NUMBER: str = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679"
+    PI_NUMBER: int = 31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
     PI_SCALE: int = 100
     _scale: int = DEFAULT_SCALE
 
@@ -31,6 +31,43 @@ class DecimalNumber:
         else:
             raise DecimalNumberExceptionBadInit("Only 'int' or 'str' instances are allowed for initialization")
 
+    @classmethod
+    def pi(cls) -> "DecimalNumber":
+        """Calculation of PI using the very fast algorithm present on the
+        documentation of the module "decimal" of the Python Standard Library:
+        https://docs.python.org/3/library/decimal.html#recipes
+        """
+        # If it is precalculated
+        if DecimalNumber.PI_SCALE >= DecimalNumber._scale:
+            return DecimalNumber(DecimalNumber.PI_NUMBER, DecimalNumber.PI_SCALE)
+        else:
+            # Calculates PI
+            scale: int = DecimalNumber._scale
+            # extra digits for intermediate steps
+            DecimalNumber.set_scale(DecimalNumber._scale + 4)
+            lasts = DecimalNumber(0)
+            t = DecimalNumber(3)
+            s = DecimalNumber(3)
+            n = DecimalNumber(1)
+            na = DecimalNumber(0)
+            d = DecimalNumber(0)
+            da = DecimalNumber(24)
+            eight = DecimalNumber(8)
+            thirtytwo = DecimalNumber(32)
+            while s != lasts:
+                lasts.copy_from(s)
+                n += na
+                na += eight
+                d += da
+                da += thirtytwo
+                t = (t * n) / d
+                s += t
+            DecimalNumber.set_scale(scale)
+            # Stores the calculated PI
+            DecimalNumber.PI_NUMBER = (+s)._number  # + adjusts to the scale
+            DecimalNumber.PI_SCALE = scale
+            return +s
+
     @staticmethod
     def set_scale(num_digits: int) -> None:
         if num_digits >= 0:
@@ -38,6 +75,10 @@ class DecimalNumber:
         else:
             raise DecimalNumberExceptionMathDomainError(
                 "set_scale: scale must be positive")
+
+    @staticmethod
+    def get_scale() -> int:
+        return DecimalNumber._scale
 
     @staticmethod
     def _parse_number(number: str) -> Tuple[bool, int, int]:  # True: correct
@@ -90,10 +131,6 @@ class DecimalNumber:
             return (False, 0, 0)
 
     @staticmethod
-    def get_scale() -> int:
-        return DecimalNumber._scale
-
-    @staticmethod
     def _from_string(number: str) -> "DecimalNumber":
         correct, integer_number, num_decimals = DecimalNumber._parse_number(
             number)
@@ -136,39 +173,6 @@ class DecimalNumber:
         #print(num_integer, n._num_decimals, n)
         n._reduce_to_scale()
         return n
-
-    @staticmethod
-    def pi() -> "DecimalNumber":
-        # If it is precalculated
-        if DecimalNumber.PI_SCALE >= DecimalNumber._scale:
-            return DecimalNumber(DecimalNumber.PI_NUMBER)
-        else:
-            # Calculates PI
-            scale: int = DecimalNumber._scale
-            # extra digits for intermediate steps
-            DecimalNumber.set_scale(DecimalNumber._scale + 4)
-            lasts = DecimalNumber(0)
-            t = DecimalNumber(3)
-            s = DecimalNumber(3)
-            n = DecimalNumber(1)
-            na = DecimalNumber(0)
-            d = DecimalNumber(0)
-            da = DecimalNumber(24)
-            eight = DecimalNumber(8)
-            thirtytwo = DecimalNumber(32)
-            while s != lasts:
-                lasts.copy_from(s)
-                n += na
-                na += eight
-                d += da
-                da += thirtytwo
-                t = (t * n) / d
-                s += t
-            DecimalNumber.set_scale(scale)
-            # Stores the calculated PI
-            DecimalNumber.PI_NUMBER = str(+s)  # + adjusts to the scale
-            DecimalNumber.PI_SCALE = scale
-            return +s
 
     def __add__(self, other: "DecimalNumber") -> "DecimalNumber":
         #   123 + 456       : 123
@@ -628,6 +632,12 @@ class DecimalNumberExceptionDivisionByZeroError(DecimalNumberException):
             return "DecimalNumberExceptionDivisionByZeroError"
 
 
+def solve_quadratic_equation(a: DecimalNumber, b: DecimalNumber, c: DecimalNumber):
+	r = (b * b - 4 * a * c).square_root()
+	x1 = (-b + r) / (2 * a)
+	x2 = (-b - r) / (2 * a)
+	return (x1, x2)
+
 def test():
 
     #   a * x² + b * x + c = 0
@@ -636,20 +646,16 @@ def test():
     a = DecimalNumber(1)
     b = DecimalNumber(-3)
     c = DecimalNumber(-10)
-
-    r = (b * b - 4 * a * c).square_root()
-    x1 = (-b + r) / (2 * a)
-    x2 = (-b - r) / (2 * a)
-    print(x1, x2)
+    x = solve_quadratic_equation(a, b, c)
+    print(x)
 
     a = DecimalNumber(7)
     b = DecimalNumber(-5)
     c = DecimalNumber(-9)
-
-    r = (b * b - 4 * a * c).square_root()
-    x1 = (-b + r) / (2 * a)
-    x2 = (-b - r) / (2 * a)
-    print(x1, x2)
+    x = solve_quadratic_equation(a, b, c)
+    print(x)
+    print( eval(x[0].__repr__()) )
+    print( eval(x[0].__repr__()) == x[0] )
 
 
 if __name__ == "__main__":
