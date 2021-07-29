@@ -111,14 +111,14 @@ str(n)
 ```
 
 
-The method **to_string_thousands()** of **DecimalNumber** returns a string with the number formatted with ',' as thousands separator. Decimals are not affected:
+The method **to_string_thousands()** of **DecimalNumber** returns a string with the number formatted with ',' as thousands separator. Decimals are presented normally:
 
 ```python
 print(n.to_string_thousands())
 # Result: 93,402.5184
 ```
 
-Micropython can be used to print information on a display with limited characters. For example, on a 16x2 LCD (two lines of 16 characters). For these kind of cases exists the method **to_string_max_length()**. It limits the representation of the number to a maximum length of characters, including '.' and '-'. The minimum value is 8. If decimals cannot fit in, they are discarded. If the integer part of the number is bigger than the maximum length, the result is the string "Overflow". Some examples:
+Micropython can be used to print information on displays with a limited number of characters. For example, on a 16x2 LCD (two lines of 16 characters). For these kind of cases exists the method **to_string_max_length()**. It limits the representation of the number to a maximum length of characters, including '.' and '-'. The minimum value is 8. If decimals cannot fit in, they are discarded. If the integer part of the number is bigger than the maximum length, the result is the string "Overflow". Some examples:
 
 ```python
 n = DecimalNumber("123456789.012")
@@ -137,7 +137,7 @@ print(n.to_string_max_length(8))
 
 ### Modifying the **scale** of **DecimalNumber** ###
 
-**scale** is a global value of the class **DecimalNumber** that stores the number of decimals that the class uses for its numbers an operations. The default value is 16. It can be got with the method **DecimalNumber.get_scale()** and set with th method **DecimalNumber.set_scale()**:
+**scale** is a global value of the class **DecimalNumber** that stores the number of decimals that the class uses for its numbers an operations. The default value is 16. **DecimalNumber.get_scale()** returns the current **scale** and the method **DecimalNumber.set_scale()** sets **scale**:
 
 ```python
 current_scale = DecimalNumber.get_scale()   # Gets the scale
@@ -152,7 +152,7 @@ DecimalNumber.set_scale(current_scale)      # Back to the previous scale
 
 **Basic operations**
 
-The basic operations (addition, subtraction, multiplication and division) allow to mix **DecimalNumber** and *int* operands. The result is always a **DecimalNumber**. Examples:
+The basic operations (addition, subtraction, multiplication and division) allow to mix **DecimalNumber** objects and *int* objects. The result is always a **DecimalNumber**. Examples:
 
 ```python
 a = DecimalNumber("7.3329")
@@ -243,7 +243,7 @@ r2 = a.square_root()            # Calculates the square root of 2 with 30 decima
 print(r2)                       # 1.414213562373095048801688724209
 DecimalNumber.set_scale(10)     # Sets the scale = 10
 print(r2)                       # 1.414213562373095048801688724209
-                                # Chaging the scale does not affect a number
+                                # Changing the scale does not modify a number
                                 # unless an operation is made with it, like,
                                 # for example, the unary + operator:
 print(+r2)                      # 1.4142135624
@@ -289,7 +289,7 @@ print(a == b)   # True: they are equal numbers.
 print(a is b)   # False: they are different objects.
 ```
 
-**copy_from()** copies into a **DecimalNumber** other **DecimalNumber** passed as a parameter. The reason for this method is that Python does not allow to overload the *assign* operator: '='. In the previous example, "b = a" makes b to point to object a, they are the same object. We need a way to copy one into the other, remaining independent objects. Example:
+**copy_from()** copies into a **DecimalNumber** other **DecimalNumber** passed as a parameter. The reason for this method is that Python does not allow to overload the *assign* operator: '='. "b = a" would make b to point to object a, they would be the same object. We need a way to copy one into the other while remaining independent objects. Example:
 
 ```python
 a = DecimalNumber("657.31")
@@ -322,7 +322,7 @@ This method uses the very fast algorithm to calculate PI present on the section 
 
 ### Other considerations ###
 
-**DecimalNumber** class can operate mixing *int* numbers and **DecimalNumber** objects. *float* numbers have not been considered because of their imprecision.
+**DecimalNumber** class can operate mixing *int* numbers and **DecimalNumber** objects. *float* numbers were not considered because of their imprecision.
 
 Try this using CPython (on a PC):
 ```python
@@ -340,7 +340,7 @@ print( (1e11 * 1e-2) == 1e9 )   # False!!!
 
 
 
-
+## Exceptions ##
 
 
 
