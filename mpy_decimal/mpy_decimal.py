@@ -70,6 +70,10 @@ class DecimalNumber:
             return +s
 
     @staticmethod
+    def version() -> str:
+        return DecimalNumber.VERSION
+
+    @staticmethod
     def set_scale(num_digits: int) -> None:
         if num_digits >= 0:
             DecimalNumber._scale = num_digits
@@ -141,6 +145,39 @@ class DecimalNumber:
         else:
             n = DecimalNumber(integer_number, num_decimals)
         return n
+
+    @staticmethod
+    def _make_integer_comparable(n1: "DecimalNumber", n2: "DecimalNumber") -> Tuple[int]:
+            # Makes the integers comparable by taking into account the decimals
+        max_decimals: int = max(n1._num_decimals, n2._num_decimals)
+        n1_number: int = n1._number
+        if not n1._is_positive:
+            n1_number = -n1_number
+        n2_number: int = n2._number
+        if not n2._is_positive:
+            n2_number = -n2_number
+        if max_decimals > n1._num_decimals:
+            n1_number *= 10 ** (max_decimals - n1._num_decimals)
+        if max_decimals > n2._num_decimals:
+            n2_number *= 10 ** (max_decimals - n2._num_decimals)
+        return (n1_number, n2_number)
+
+    @staticmethod
+    def _isqrt(n: int) -> int:
+        if n < 0:
+            return 0
+        # Calculates initial value
+        t: int = n
+        x1: int = 1
+        while t > 100:
+            x1 *= 10
+            t //= 100
+        # Uses Newton's method
+        x2: int = (x1 + n // x1) // 2
+        while abs(x2 - x1) > 1:
+            x1 = x2
+            x2 = (x1 + n // x1) // 2
+        return x2
 
     def clone(self) -> "DecimalNumber":
         n = DecimalNumber()
@@ -502,39 +539,6 @@ class DecimalNumber:
             if str_number == "-0":
                 str_number = "0"
             return str_number
-
-    @staticmethod
-    def _make_integer_comparable(n1: "DecimalNumber", n2: "DecimalNumber") -> Tuple[int]:
-            # Makes the integers comparable by taking into account the decimals
-        max_decimals: int = max(n1._num_decimals, n2._num_decimals)
-        n1_number: int = n1._number
-        if not n1._is_positive:
-            n1_number = -n1_number
-        n2_number: int = n2._number
-        if not n2._is_positive:
-            n2_number = -n2_number
-        if max_decimals > n1._num_decimals:
-            n1_number *= 10 ** (max_decimals - n1._num_decimals)
-        if max_decimals > n2._num_decimals:
-            n2_number *= 10 ** (max_decimals - n2._num_decimals)
-        return (n1_number, n2_number)
-
-    @staticmethod
-    def _isqrt(n: int) -> int:
-        if n < 0:
-            return 0
-        # Calculates initial value
-        t: int = n
-        x1: int = 1
-        while t > 100:
-            x1 *= 10
-            t //= 100
-        # Uses Newton's method
-        x2: int = (x1 + n // x1) // 2
-        while abs(x2 - x1) > 1:
-            x1 = x2
-            x2 = (x1 + n // x1) // 2
-        return x2
 
     def _eliminate_decimal_trailing_zeros(self) -> None:
         while self._num_decimals > 0 and (self._number % 10) == 0:
