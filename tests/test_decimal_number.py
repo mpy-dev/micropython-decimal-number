@@ -666,7 +666,7 @@ class TestDecimalNumber():
         self.test_counter += 1
         failed: bool = False
         n1 = DecimalNumber("12.3")
-        n2 = DecimalNumber("0.98765")
+        n2 = DecimalNumber("-0.98765")
 
         if not self.assertFalse(n1 < n2, "Error evaluating {0} < {1}".format(n1, n2)):
             failed = True
@@ -786,7 +786,10 @@ class TestDecimalNumber():
         list_numbers = [
             ("123", "123", 123, 123),
             ("123", "123.45", 12300, 12345),
-            ("123.45", "123", 12345, 12300)
+            ("123.45", "123", 12345, 12300),
+            ("-123", "123", -123, 123),
+            ("123", "-123.45", 12300, -12345),
+            ("-123.45", "123", -12345, 12300)
         ]
         for n in list_numbers:
             n1 = DecimalNumber(n[0])
@@ -983,12 +986,16 @@ class TestDecimalNumber():
 if __name__ == "__main__":
     print("Testing the module 'decimal_number':")
 
-    test = TestDecimalNumber()                                  # Creates an object of the class for tests
-    failed_counter: int = 0                                     # Counts the number of tests that fail
-    for k, v in TestDecimalNumber.__dict__.items():             # Iterates through the items to find methods 'test_...'
+    # Creates an object of the class for tests
+    test = TestDecimalNumber()
+    # Counts the number of tests that fail
+    failed_counter: int = 0
+    # Iterates through the items to find methods 'test_...'
+    for k, v in TestDecimalNumber.__dict__.items():
         if k.startswith("test_") and callable(v):
             print("Testing: ", k)
-            failed: bool = TestDecimalNumber.__dict__[k](test)  # Executes the test
+            failed: bool = TestDecimalNumber.__dict__[
+                k](test)  # Executes the test
             if failed:
                 failed_counter += 1
 

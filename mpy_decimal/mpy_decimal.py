@@ -16,7 +16,7 @@ class DecimalNumber:
     PI_SCALE: int = 100
     _scale: int = DEFAULT_SCALE
 
-    def __init__(self, number = 0, decimals: int = 0) -> None:
+    def __init__(self, number=0, decimals: int = 0) -> None:
         if isinstance(number, int):
             self._is_positive: bool = (number >= 0)
             self._number: int = number if number >= 0 else -number
@@ -29,7 +29,8 @@ class DecimalNumber:
         elif isinstance(number, str):
             self.copy_from(DecimalNumber._from_string(number))
         else:
-            raise DecimalNumberExceptionBadInit("Only 'int' or 'str' instances are allowed for initialization")
+            raise DecimalNumberExceptionBadInit(
+                "Only 'int' or 'str' instances are allowed for initialization")
 
     @classmethod
     def pi(cls) -> "DecimalNumber":
@@ -242,7 +243,7 @@ class DecimalNumber:
         return self
 
     def __radd__(self, other: int) -> "DecimalNumber":
-        return self.__add__( DecimalNumber(other) )
+        return self.__add__(DecimalNumber(other))
 
     def __sub__(self, other: "DecimalNumber") -> "DecimalNumber":
         if isinstance(other, int):
@@ -259,7 +260,7 @@ class DecimalNumber:
         return self
 
     def __rsub__(self, other: int) -> "DecimalNumber":
-        return self.__sub__( DecimalNumber(other) )
+        return self.__sub__(DecimalNumber(other))
 
     def __mul__(self, other: "DecimalNumber") -> "DecimalNumber":
         if isinstance(other, int):
@@ -279,7 +280,7 @@ class DecimalNumber:
         return self
 
     def __rmul__(self, other: int) -> "DecimalNumber":
-        return self.__mul__( DecimalNumber(other) )
+        return self.__mul__(DecimalNumber(other))
 
     def __truediv__(self, other: "DecimalNumber") -> "DecimalNumber":
         if isinstance(other, int):
@@ -303,7 +304,7 @@ class DecimalNumber:
         return self
 
     def __rtruediv__(self, other: int) -> "DecimalNumber":
-        return self.__truediv__( DecimalNumber(other) )
+        return self.__truediv__(DecimalNumber(other))
 
     def __pow__(self, other: int) -> "DecimalNumber":
         # Exponentition by squaring: https://en.wikipedia.org/wiki/Exponentiation_by_squaring
@@ -358,7 +359,7 @@ class DecimalNumber:
         return (n1 < n2)
 
     def __rlt__(self, other: int) -> bool:  # Less than
-        return self.__lt__( DecimalNumber(other) )
+        return self.__lt__(DecimalNumber(other))
 
     def __le__(self, other: "DecimalNumber") -> bool:  # Less than or equal to
         if isinstance(other, int):
@@ -367,7 +368,7 @@ class DecimalNumber:
         return (n1 <= n2)
 
     def __rle__(self, other: int) -> bool:  # Less than or equal to
-        return self.__le__( DecimalNumber(other) )
+        return self.__le__(DecimalNumber(other))
 
     def __eq__(self, other: "DecimalNumber") -> bool:  # Equal to
         if isinstance(other, int):
@@ -376,7 +377,7 @@ class DecimalNumber:
         return (n1 == n2)
 
     def __req__(self, other: int) -> bool:  # Equal to
-        return self.__eq__( DecimalNumber(other) )
+        return self.__eq__(DecimalNumber(other))
 
     def __ne__(self, other: "DecimalNumber") -> bool:  # Not equal to
         if isinstance(other, int):
@@ -385,7 +386,7 @@ class DecimalNumber:
         return (n1 != n2)
 
     def __rne__(self, other: int) -> bool:  # Not equal to
-        return self.__ne__( DecimalNumber(other) )
+        return self.__ne__(DecimalNumber(other))
 
     def __gt__(self, other: "DecimalNumber") -> bool:  # Greater than
         if isinstance(other, int):
@@ -394,7 +395,7 @@ class DecimalNumber:
         return (n1 > n2)
 
     def __rgt__(self, other: int) -> bool:  # Greater than
-        return self.__gt__( DecimalNumber(other) )
+        return self.__gt__(DecimalNumber(other))
 
     def __ge__(self, other: "DecimalNumber") -> bool:  # Greater than or equal to
         if isinstance(other, int):
@@ -403,7 +404,7 @@ class DecimalNumber:
         return (n1 >= n2)
 
     def __rge__(self, other: int) -> bool:  # Greater than or equal to
-        return self.__ge__( DecimalNumber(other) )
+        return self.__ge__(DecimalNumber(other))
 
     def __str__(self, thousands: bool = False) -> str:
         #   Integer / Decimals: String
@@ -469,7 +470,6 @@ class DecimalNumber:
         DecimalNumber._scale = s
         return n._number
 
-
     def to_string_thousands(self) -> str:
         return self.__str__(True)
 
@@ -508,7 +508,11 @@ class DecimalNumber:
             # Makes the integers comparable by taking into account the decimals
         max_decimals: int = max(n1._num_decimals, n2._num_decimals)
         n1_number: int = n1._number
+        if not n1._is_positive:
+            n1_number = -n1_number
         n2_number: int = n2._number
+        if not n2._is_positive:
+            n2_number = -n2_number
         if max_decimals > n1._num_decimals:
             n1_number *= 10 ** (max_decimals - n1._num_decimals)
         if max_decimals > n2._num_decimals:
@@ -579,6 +583,7 @@ class DecimalNumber:
 class DecimalNumberException(Exception):
     pass
 
+
 class DecimalNumberExceptionParseError(DecimalNumberException):
     def __init__(self, *args: object) -> None:
         if args:
@@ -591,6 +596,7 @@ class DecimalNumberExceptionParseError(DecimalNumberException):
             return "DecimalNumberExceptionParseError: {0}".format(self.message)
         else:
             return "DecimalNumberExceptionParseError"
+
 
 class DecimalNumberExceptionBadInit(DecimalNumberException):
     def __init__(self, *args: object) -> None:
@@ -605,6 +611,7 @@ class DecimalNumberExceptionBadInit(DecimalNumberException):
         else:
             return "DecimalNumberExceptionBadInit"
 
+
 class DecimalNumberExceptionMathDomainError(DecimalNumberException):
     def __init__(self, *args: object) -> None:
         if args:
@@ -617,6 +624,7 @@ class DecimalNumberExceptionMathDomainError(DecimalNumberException):
             return "DecimalNumberExceptionMathDomainError: {0}".format(self.message)
         else:
             return "DecimalNumberExceptionMathDomainError"
+
 
 class DecimalNumberExceptionDivisionByZeroError(DecimalNumberException):
     def __init__(self, *args: object) -> None:
@@ -632,33 +640,5 @@ class DecimalNumberExceptionDivisionByZeroError(DecimalNumberException):
             return "DecimalNumberExceptionDivisionByZeroError"
 
 
-def solve_quadratic_equation(a: DecimalNumber, b: DecimalNumber, c: DecimalNumber):
-	r = (b * b - 4 * a * c).square_root()
-	x1 = (-b + r) / (2 * a)
-	x2 = (-b - r) / (2 * a)
-	return (x1, x2)
-
-def test():
-
-    #   a * x² + b * x + c = 0
-    #   x1 = (-b + sqrt(b*b - 4*a*c)) / 2*a
-    #   x2 = (-b - sqrt(b*b - 4*a*c)) / 2*a
-    a = DecimalNumber(1)
-    b = DecimalNumber(-3)
-    c = DecimalNumber(-10)
-    x = solve_quadratic_equation(a, b, c)
-    print(x)
-
-    a = DecimalNumber(7)
-    b = DecimalNumber(-5)
-    c = DecimalNumber(-9)
-    x = solve_quadratic_equation(a, b, c)
-    print(x)
-    print( eval(x[0].__repr__()) )
-    print( eval(x[0].__repr__()) == x[0] )
-
-
 if __name__ == "__main__":
     print("DecimalNumber module -", DecimalNumber.VERSION)
-
-    test()

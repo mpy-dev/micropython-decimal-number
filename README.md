@@ -50,11 +50,19 @@ All the internal operations of **DecimalNumber** are done with integers (*int* b
 
 ## How to use
 
-You can start by importing the module:
+To test this module on a PC, you can start by importing the module:
 
-    from mpy_decimal.mpy_decimal import *
+```python
+from mpy_decimal.mpy_decimal import *
+```
 
-If you need (and can) run your code on both, a computer and a micropython board, you will probably need to run different code depending on the device. You can do it this way:
+For testing on a Micropython board, you have probably copied the file 'mpy_decimal.py' to the board or a compiled version of it: 'mpy_decimal.mpy'. There is a guide about this at the end of this document. You can import the module with:
+
+```python
+from mpy_decimal import *
+```
+
+If you need your code to run on both, a computer and a micropython board, you will probably need to run different code depending on the device. You can do it this way:
 
 ```python
 import sys
@@ -268,9 +276,9 @@ print(1 > b)    # False
 
 ### Other methods ###
 
-**to_int_truncate()** returns and integer of a **DecimalNumber** after truncating the decimals.
+**to_int_truncate()** returns and *int* that contains the integer part of a **DecimalNumber** after truncating the decimals.
 
-**to_int_round()** returns and integer of a **DecimalNumber** after rounding it to zero decimals.
+**to_int_round()** returns and *int* that contains the integer part of a **DecimalNumber** after rounding it to zero decimals.
 
 Example:
 
@@ -312,13 +320,13 @@ print(a is b)   # False: they are different objects.
 ```python
 pi = DecimalNumber.pi()         # Default scale, equal to 16
 print(DecimalNumber.pi())       # 3.1415926535897932
-DecimalNumber.set_scale(30)     # Set scale = 30
-print(DecimalNumber.pi())       # 3.14159265358979323846264338328
+DecimalNumber.set_scale(30)     # Set scale = 36
+print(DecimalNumber.pi())       # 3.141592653589793238462643383279502884
 ```
 
 PI is precalculated with 100 decimals and stored in the class. If **pi()** method is used with **scale** <= 100, PI is not calculated, but returned using the precalculated value. If **scale** is set to a value greater than 100, for example, 300, PI is calculated, stored in the class and returned. After that, the precalculated limit is 300 instead of 100, and any call to **pi()** with a **scale** <= 300 returns the value of PI from the precalculated value.
 
-This method uses the very fast algorithm to calculate PI present on the section [Recipes](https://docs.python.org/3/library/decimal.html#recipes) of the documentation of Python Standard Library's module **decimal**.
+To calculate PI, this method uses the very fast algorithm present on the section [Recipes](https://docs.python.org/3/library/decimal.html#recipes) of the documentation for the module **decimal**, part of Python Standard Library.
 
 ### Other considerations ###
 
@@ -334,17 +342,105 @@ There is nothing wrong with Python, it is the way *float* numbers work.
 Try this using Micropython (I have used a Raspberry Pi Pico):
 
 ```python
-# Compares 10¹¹ * 10⁻² with 10⁹, which should be True
-print( (1e11 * 1e-2) == 1e9 )   # False!!!
+# Compares 10¹¹ * 10⁻² to 10⁹, which should be True
+print( (1e11 * 1e-2) == 1e9 )       # False!!!
 ```
 
 
 
 ## Exceptions ##
 
+This module defines four exceptions:
+
+* **DecimalNumberExceptionParseError**: a 
+**DecimalNumber** can be initialize providing a string that contains a number. If the content of the string cannot be parsed as a correct number, this exception is raised.
+
+* **DecimalNumberExceptionBadInit**: this exception is raised when a negative number of decimals is provided when initializing a **DecimalNumber**.
+
+* **DecimalNumberExceptionMathDomainError**: this exception occurs when trying to calculate the square root of a negative number.
+
+* **DecimalNumberExceptionDivisionByZeroError**: this is the division by zero exception.
 
 
-## Examples ##
+## Example ##
+
+This example shows how to use **DecimalNumber** to solve quadratic equations.
+
+```python
+from mpy_decimal.mpy_decimal import *
+
+
+def solve_quadratic_equation(a: DecimalNumber, b: DecimalNumber, c: DecimalNumber) -> Tuple[bool, DecimalNumber, DecimalNumber]:
+    """It solves quadratic equations:
+    a * x² + b * x + c = 0
+    x₁ = (-b + sqrt(b*b - 4*a*c)) / (2*a)
+    x₂ = (-b - sqrt(b*b - 4*a*c)) / (2*a)
+    """
+
+    # This is done by catching the Exception raised when calculating
+    # the square root of a negative number. It is instructive, but it
+    # can be avoided by simply checking if (b * b - 4 * a * c) is a
+    # negative number before calling square_root().
+    try:
+        r = (b * b - 4 * a * c).square_root()
+        x1 = (-b + r) / (2 * a)
+        x2 = (-b - r) / (2 * a)
+        return True, x1, x2
+    except DecimalNumberExceptionMathDomainError:
+        return False, None, None
+
+
+def string_equation(a: DecimalNumber, b: DecimalNumber, c: DecimalNumber) -> str:
+    return "{0}x² {1}x {2} = 0".format(
+        a,
+        "- " + str(abs(b)) if b < 0 else '+ ' + str(b),
+        "- " + str(abs(c)) if c < 0 else '+ ' + str(c)
+    )
+
+
+list_equations = [
+    (7, -5, -9),
+    (1, -3, 10),
+    (4, 25, 21),
+    (1, 3, -10)
+]
+
+print("-" * 50)
+for e in list_equations:
+    a = DecimalNumber(e[0])
+    b = DecimalNumber(e[1])
+    c = DecimalNumber(e[2])
+    solution, x1, x2 = solve_quadratic_equation(a, b, c)
+    print(string_equation(a, b, c))
+    if solution:
+        print("   x₁ =", x1)
+        print("   x₂ =", x2)
+    else:
+        print("   The equation does not have a real solution.")
+    print("-" * 50)
+```
+
+This is what the program prints:
+
+    --------------------------------------------------
+    7x² - 5x - 9 = 0
+    x1 = 1.545951212649517
+    x2 = -0.8316654983638027
+    --------------------------------------------------
+    1x² - 3x + 10 = 0
+    The equation does not have a real solution.
+    --------------------------------------------------
+    4x² + 25x + 21 = 0
+    x1 = -1
+    x2 = -5.25
+    --------------------------------------------------
+    1x² + 3x - 10 = 0
+    x₁ = 2
+    x₂ = -5
+    --------------------------------------------------
+
+
+## Using DecimalNumber on a Micropython board ##
 
 
 
