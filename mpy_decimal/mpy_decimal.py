@@ -143,11 +143,9 @@ class DecimalNumber:
             p *= e
 
         two = DecimalNumber(2)
-        counter: int = 0
         while y0 != y1:
             y0.copy_from(y1)
-            y1 = y0 + 2 * ((n - y0.exp(False)) / (n + y0.exp(False)))
-            counter += 1
+            y1 = y0 + two * ((n - y0.exp(False)) / (n + y0.exp(False)))
 
         DecimalNumber.set_scale(scale)
         return +y1
