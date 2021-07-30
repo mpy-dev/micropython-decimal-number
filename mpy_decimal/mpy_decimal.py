@@ -14,6 +14,8 @@ class DecimalNumber:
     USE_THOUSANDS_SEP: bool = False
     PI_NUMBER: int = 31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
     PI_SCALE: int = 100
+    E_NUMBER: int = 27182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274
+    E_SCALE: int = 100
     _scale: int = DEFAULT_SCALE
 
     def __init__(self, number=0, decimals: int = 0) -> None:
@@ -68,6 +70,87 @@ class DecimalNumber:
             DecimalNumber.PI_NUMBER = (+s)._number  # + adjusts to the scale
             DecimalNumber.PI_SCALE = scale
             return +s
+
+    @classmethod
+    def e(cls) -> "DecimalNumber":
+        # If it is precalculated
+        if DecimalNumber.E_SCALE >= DecimalNumber._scale:
+            return DecimalNumber(DecimalNumber.E_NUMBER, DecimalNumber.E_SCALE)
+        else:
+            scale: int = DecimalNumber._scale
+            # extra digits for intermediate steps
+            DecimalNumber.set_scale(DecimalNumber._scale + 4)
+
+            i = DecimalNumber(0)
+            f = DecimalNumber(1)
+            e = DecimalNumber(1)
+            e2 = DecimalNumber(0)
+            one = DecimalNumber(1)
+            while e2 != e:
+                e2.copy_from(e)
+                i += one		# counter
+                f *= i
+                t = one / f
+                e += t
+
+            DecimalNumber.set_scale(scale)
+            # Stores the calculated E
+            DecimalNumber.E_NUMBER = (+e)._number  # + adjusts to the scale
+            DecimalNumber.E_SCALE = scale
+            return +e
+
+    def exp(n: "DecimalNumber", inc_scale: bool = True) -> "DecimalNumber":
+        """Calculates exp(n)"""
+        if inc_scale:
+            scale: int = DecimalNumber._scale
+            DecimalNumber.set_scale(DecimalNumber._scale + 10) # extra digits for intermediate steps
+
+        i = DecimalNumber(0)
+        x = DecimalNumber(1)
+        f = DecimalNumber(1)
+        e = DecimalNumber(1)
+        e2 = DecimalNumber(0)
+        one = DecimalNumber(1)
+        while e2 != e:
+            e2.copy_from(e)
+            i += one		# counter
+            x *= n
+            f *= i
+            t = x / f
+            e += t
+
+        if inc_scale:
+            DecimalNumber.set_scale(scale)
+        return +e
+
+    def ln(n: "DecimalNumber") -> "DecimalNumber":
+        """Calculates ln(n)
+        
+        TODO: Check n for zero or negative values 
+        
+        """
+        scale: int = DecimalNumber._scale
+        DecimalNumber.set_scale(DecimalNumber._scale + 10) # extra digits for intermediate steps
+
+        # Estimate first value
+        e = DecimalNumber.e()
+        y0 = DecimalNumber(0)
+        y1 = DecimalNumber(1)
+        one = DecimalNumber(1)
+        p: DecimalNumber = e.clone()
+        while p < n:
+            y1 += one
+            p *= e
+
+        two = DecimalNumber(2)
+        counter: int = 0
+        while y0 != y1:
+            y0.copy_from(y1)
+            y1 = y0 + 2 * ((n - y0.exp(False)) / (n + y0.exp(False)))
+            counter += 1
+
+        DecimalNumber.set_scale(scale)
+        return +y1
 
     @staticmethod
     def version() -> str:
@@ -349,10 +432,10 @@ class DecimalNumber:
         x = self.clone()
         x._is_positive = True
         if other == 0:
-            return 1
+            return DecimalNumber(1)
         scale: int = DecimalNumber._scale
         # extra digits for intermediate steps
-        DecimalNumber.set_scale(DecimalNumber._scale + 9)
+        DecimalNumber.set_scale(DecimalNumber._scale * 2)
         if other < 0:
             x = DecimalNumber(1) / x
             other = -other
