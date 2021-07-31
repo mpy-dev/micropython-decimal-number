@@ -7,7 +7,7 @@ if sys.implementation.name == "cpython":
     import traceback
     import time
     iteration_limit: int = 100000
-    pi_decimals: int = 5000
+    pi_decimals: int = 1000
 if sys.implementation.name == "micropython":
     import machine
     import utime
@@ -59,6 +59,8 @@ def gen_random_number() -> DecimalNumber:
 
 
 def perf_decimal_number() -> None:
+    global iteration_limit
+
     """Performance calculations of DecimalNumber class"""
     print("{:<30}".format("Scale (max. decimals):"), DecimalNumber.get_scale())
     print("{:<30}".format("Iterations per test:"), iteration_limit)
@@ -135,9 +137,31 @@ def perf_decimal_number() -> None:
     print("{:<30}".format("DecimalNumber from string:"),
           t / iteration_limit, "ms")
 
+    # From this point, the iterations are reduced
+    iteration_limit //= 100
+
+    # Exponential
+    n = DecimalNumber("12.345")
+    t = get_time_ms()
+    for _ in range(0, iteration_limit):
+        n3 = n.exp()
+    t = get_time_ms() - t
+    print("{:<30}".format("Exponential: exp(" + str(n) + ")"), t / iteration_limit, "ms")
+
+
+    # Natural logarithm
+    n = DecimalNumber("12.345")
+    t = get_time_ms()
+    for _ in range(0, iteration_limit):
+        n3 = n.exp()
+    t = get_time_ms() - t
+    print("{:<30}".format("Natural logarithm: ln(" + str(n) + ")"), t / iteration_limit, "ms")
+
 
 def perf_decimal_number_pi() -> None:
     """Performance of the calculation of PI."""
+    global pi_decimals
+
     # Calculating PI
     # PI is precalculated up to 100 decimals.
     # We need to set scale > 100 to actually calculated.
