@@ -140,7 +140,7 @@ class DecimalNumber:
         """
         scale = DecimalNumber.get_scale()
         # Calculating the necessary extra scale:
-        extra = (self / DecimalNumber("2.3")).to_int_round() + 10
+        extra = (abs(self) / DecimalNumber("2.3")).to_int_round() + 10
         DecimalNumber.set_scale(scale + extra)
         if abs(self) <= 1:
             r = DecimalNumber._exp_lt_1(self, inc_scale)
@@ -188,7 +188,7 @@ class DecimalNumber:
         TODO: Check n for zero or negative values 
         
         """
-        scale: int = DecimalNumber._scale
+        scale: int = DecimalNumber.get_scale()
 
         # Estimate first value
         DecimalNumber.set_scale(10) # Low scale for this is enough
@@ -202,7 +202,7 @@ class DecimalNumber:
             p *= e
 
         DecimalNumber.set_scale(scale) # Restores scale
-        DecimalNumber.set_scale(DecimalNumber._scale + 10) # extra digits for intermediate steps
+        DecimalNumber.set_scale(DecimalNumber.get_scale() + 10) # extra digits for intermediate steps
         two = DecimalNumber(2)
         while y0 != y1:
             y0.copy_from(y1)
@@ -210,6 +210,62 @@ class DecimalNumber:
 
         DecimalNumber.set_scale(scale)
         return +y1
+
+    def sin(self) -> "DecimalNumber":
+        """Calculates sin(x). x = radians """
+        x = self.clone()
+        scale: int = DecimalNumber.get_scale()
+        DecimalNumber.set_scale(scale + 4) # extra digits for intermediate steps
+
+        # sin(x) = x - x³/3! + x⁵/5! - x⁷/7! ...
+
+        negative_radians: bool = (x < 0)
+        if negative_radians:
+            x = -x
+        # Calculates x mod 2π
+        pi = DecimalNumber.pi()
+        f: int = (x / (pi * 2)).to_int_truncate()
+        if f > 0:
+            x -= f * 2 * pi
+
+        # Determines the quadrant and reduces the range of x to 0 - π/2
+        # sin(-x) = -sin(x) ; cos(-x) = cos(x) ; tan(-x) = -tan(x) 
+        half_pi = pi / 2
+        r = half_pi.clone()
+        quadrant: int = 1
+        while x > r:
+            r += half_pi
+            quadrant += 1
+
+        if quadrant == 2:
+            x = pi - x
+        elif quadrant == 3:
+            x = x - pi
+        elif quadrant == 4:
+            x = 2 * pi - x
+
+        i = DecimalNumber(1)    # counter
+        two = DecimalNumber(2)
+        n = x.clone()
+        d = DecimalNumber(1)
+        s = DecimalNumber(1)
+        e = n.clone()
+        e2 = DecimalNumber(0)
+        while e2 != e:
+            e2.copy_from(e)
+            i += two
+            n *= x * x
+            d *= i * (i - 1)
+            s = -s
+            e += (n * s) / d
+
+        if quadrant > 2:
+            e = -e
+        if negative_radians:
+            e = -e
+
+        DecimalNumber.set_scale(scale)
+        return +e
 
     @staticmethod
     def version() -> str:
@@ -498,7 +554,7 @@ class DecimalNumber:
         scale: int = DecimalNumber._scale
         
         # Calculating the necessary extra scale:
-        extra = other * (len(str(self._number)) - self._num_decimals)
+        extra = abs(other) * (len(str(self._number)) - self._num_decimals)
         # extra digits for intermediate steps
         DecimalNumber.set_scale(DecimalNumber._scale + extra)
         if other < 0:
