@@ -44,12 +44,12 @@ class DecimalNumber:
         """
         # If it is precalculated
         if DecimalNumber.PI_SCALE >= DecimalNumber._scale:
-            return DecimalNumber(DecimalNumber.PI_NUMBER, DecimalNumber.PI_SCALE)
+            s: DecimalNumber = DecimalNumber(DecimalNumber.PI_NUMBER, DecimalNumber.PI_SCALE)
         else:
             # Calculates PI
             scale: int = DecimalNumber._scale
             # extra digits for intermediate steps
-            DecimalNumber.set_scale(DecimalNumber._scale + 4)
+            DecimalNumber.set_scale(scale + 4)
             lasts = DecimalNumber(0)
             t = DecimalNumber(3)
             s = DecimalNumber(3)
@@ -70,18 +70,18 @@ class DecimalNumber:
             DecimalNumber.set_scale(scale)
             # Stores the calculated PI
             DecimalNumber.PI_NUMBER = (+s)._number  # + adjusts to the scale
-            DecimalNumber.PI_SCALE = scale
-            return +s
+            DecimalNumber.PI_SCALE = (+s)._num_decimals
+        return +s
 
     @classmethod
     def e(cls) -> "DecimalNumber":
         # If it is precalculated
         if DecimalNumber.E_SCALE >= DecimalNumber._scale:
-            return DecimalNumber(DecimalNumber.E_NUMBER, DecimalNumber.E_SCALE)
+            e: DecimalNumber = DecimalNumber(DecimalNumber.E_NUMBER, DecimalNumber.E_SCALE)
         else:
             scale: int = DecimalNumber._scale
             # extra digits for intermediate steps
-            DecimalNumber.set_scale(DecimalNumber._scale + 4)
+            DecimalNumber.set_scale(scale + 4)
 
             i = DecimalNumber(0)
             f = DecimalNumber(1)
@@ -98,18 +98,18 @@ class DecimalNumber:
             DecimalNumber.set_scale(scale)
             # Stores the calculated E
             DecimalNumber.E_NUMBER = (+e)._number  # + adjusts to the scale
-            DecimalNumber.E_SCALE = scale
-            return +e
+            DecimalNumber.E_SCALE = (+e)._num_decimals
+        return +e
 
     @classmethod
     def ln2(cls) -> "DecimalNumber":
         """Calculates ln(2)"""
         # If it is precalculated
         if DecimalNumber.LN2_SCALE >= DecimalNumber._scale:
-            return DecimalNumber(DecimalNumber.LN2_NUMBER, DecimalNumber.LN2_SCALE)
+            e: DecimalNumber =  DecimalNumber(DecimalNumber.LN2_NUMBER, DecimalNumber.LN2_SCALE)
         else:
-            scale: int = DecimalNumber._scale
-            DecimalNumber.set_scale(DecimalNumber._scale + 4) # extra digits for intermediate steps
+            scale: int = DecimalNumber.get_scale()
+            DecimalNumber.set_scale(scale + 4) # extra digits for intermediate steps
 
             # ln(2) = -ln(1/2) = -ln(1 - 1/2)
             # ln(1-x) = -x -x²/2 - x³/3 ... --> x = 1/2 is used.
@@ -129,8 +129,8 @@ class DecimalNumber:
             DecimalNumber.set_scale(scale)
             # Stores the calculated LN2
             DecimalNumber.LN2_NUMBER = (+e)._number  # + adjusts to the scale
-            DecimalNumber.LN2_SCALE = scale
-            return +e
+            DecimalNumber.LN2_SCALE = (+e)._num_decimals
+        return +e
 
     def exp(self, inc_scale: bool = True) -> "DecimalNumber":
         """Calculates exp(n)
@@ -138,27 +138,31 @@ class DecimalNumber:
         TODO:   Works for any x, but for speed should have |x| < 1. For an arbitrary number,
                 use exp(x) = exp(x-m*log(2)) * 2^m where m = floor(x/log(2)).
         """
+        scale = DecimalNumber.get_scale()
+        # Calculating the necessary extra scale:
+        extra = (self / DecimalNumber("2.3")).to_int_round() + 10
+        DecimalNumber.set_scale(scale + extra)
         if abs(self) <= 1:
-            return DecimalNumber._exp_lt_1(self, inc_scale)
+            r = DecimalNumber._exp_lt_1(self, inc_scale)
         else:
-            return DecimalNumber(0) # waiting for development
+            m = (self / DecimalNumber.ln2()).to_int_truncate()
+            r = DecimalNumber._exp_lt_1(self - m * DecimalNumber.ln2()) * (2 ** m)
+
+        DecimalNumber.set_scale(scale)
+        return +r
 
     @staticmethod
     def _exp_lt_1(n: "DecimalNumber", inc_scale: bool = True) -> "DecimalNumber":
         """Calculates exp(n)
         Expects |n| < 1 to converge rapidly
         """
-        if inc_scale:
-            scale: int = DecimalNumber._scale
-            DecimalNumber.set_scale(DecimalNumber._scale + 4) # extra digits for intermediate steps
-
-        print("N =", n)
+        # if inc_scale:
+        #     scale: int = DecimalNumber._scale
+        #     DecimalNumber.set_scale(DecimalNumber._scale + 4) # extra digits for intermediate steps
         if n == 1:
             e = DecimalNumber.e()
         elif n == -1:
-            print("N == -1")
             e = 1 / DecimalNumber.e()
-            print(e)
         else:
             i = DecimalNumber(0)
             x = DecimalNumber(1)
@@ -174,8 +178,8 @@ class DecimalNumber:
                 t = x / f
                 e += t
 
-        if inc_scale:
-            DecimalNumber.set_scale(scale)
+        # if inc_scale:
+        #     DecimalNumber.set_scale(scale)
         return +e
 
     def ln(n: "DecimalNumber") -> "DecimalNumber":
@@ -458,17 +462,18 @@ class DecimalNumber:
         return self.__mul__(DecimalNumber(other))
 
     def __truediv__(self, other: "DecimalNumber") -> "DecimalNumber":
-        print("truediv: ", other)
         if isinstance(other, int):
             other = DecimalNumber(other)
-        a_integer: int = self._number if self._is_positive else -self._number
-        b_integer: int = other._number if other._is_positive else -other._number
+        # a_integer: int = self._number if self._is_positive else -self._number
+        # b_integer: int = other._number if other._is_positive else -other._number
+        a_integer: int
+        b_integer: int
+        a_integer, b_integer = DecimalNumber._make_integer_comparable(self, other)
         if b_integer != 0:
             c_factor: int = 10 ** (DecimalNumber._scale + 2)
             c_integer: int = (a_integer * c_factor) // b_integer
-            print(a_integer, c_factor, b_integer, c_integer)
             new_number = DecimalNumber(
-                c_integer, self._num_decimals - other._num_decimals + (DecimalNumber._scale + 2))
+                c_integer, (DecimalNumber._scale + 2))
         else:
             raise DecimalNumberExceptionDivisionByZeroError("Division by zero")
         return new_number
@@ -491,8 +496,11 @@ class DecimalNumber:
         if other == 0:
             return DecimalNumber(1)
         scale: int = DecimalNumber._scale
+        
+        # Calculating the necessary extra scale:
+        extra = other * (len(str(self._number)) - self._num_decimals)
         # extra digits for intermediate steps
-        DecimalNumber.set_scale(DecimalNumber._scale * 3)
+        DecimalNumber.set_scale(DecimalNumber._scale + extra)
         if other < 0:
             x = DecimalNumber(1) / x
             other = -other
