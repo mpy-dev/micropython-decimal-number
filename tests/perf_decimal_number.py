@@ -7,11 +7,13 @@ if sys.implementation.name == "cpython":
     import traceback
     import time
     iteration_limit: int = 100000
+    iteration_limit2: int = 40000
     pi_decimals: int = 1000
 if sys.implementation.name == "micropython":
     import machine
     import utime
     iteration_limit: int = 1000
+    iteration_limit2: int = 400
     pi_decimals: int = 300
 
 line: str = '+' + ('-' * 63) + '+'
@@ -58,12 +60,12 @@ def gen_random_number() -> DecimalNumber:
     return DecimalNumber(n, DecimalNumber.get_scale())
 
 
-def perf_decimal_number() -> None:
+def perf_decimal_number(limit1: int, limit2: int) -> None:
     global iteration_limit
 
     """Performance calculations of DecimalNumber class"""
     print("{:<30}".format("Scale (max. decimals):"), DecimalNumber.get_scale())
-    print("{:<30}".format("Iterations per test:"), iteration_limit)
+    print("{:<30}".format("Iterations per test:"), limit1)
 
     n1 = gen_random_number()
     zero: bool = True
@@ -75,111 +77,109 @@ def perf_decimal_number() -> None:
 
     # Addition
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit1):
         n3 = n1 + n2
     t = get_time_ms() - t
-    print("{:<30}".format("Addition (n1 + n2):"), t / iteration_limit, "ms")
+    print("{:<30}".format("Addition (n1 + n2):"), t / limit1, "ms")
 
     # Subtraction
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit1):
         n3 = n1 - n2
     t = get_time_ms() - t
-    print("{:<30}".format("Subtraction (n1 - n2):"), t / iteration_limit, "ms")
+    print("{:<30}".format("Subtraction (n1 - n2):"), t / limit1, "ms")
 
     # Multiplication
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit1):
         n3 = n1 * n2
     t = get_time_ms() - t
-    print("{:<30}".format("Multiplication (n1 * n2):"),
-          t / iteration_limit, "ms")
+    print("{:<30}".format("Multiplication (n1 * n2):"), t / limit1, "ms")
 
     # Division
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit1):
         n3 = n1 / n2
     t = get_time_ms() - t
-    print("{:<30}".format("Division (n1 / n2):"), t / iteration_limit, "ms")
+    print("{:<30}".format("Division (n1 / n2):"), t / limit1, "ms")
 
     # Square root
     n = abs(n1)
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit1):
         n3 = n.square_root()
     t = get_time_ms() - t
-    print("{:<30}".format("Square root abs(n1):"), t / iteration_limit, "ms")
+    print("{:<30}".format("Square root abs(n1):"), t / limit1, "ms")
 
     # Power
-    n = DecimalNumber("1.01234567")
+    n = DecimalNumber.pi() / 2
     e: int = 15
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit1):
         n3 = n ** e
     t = get_time_ms() - t
-    print("{:<30}".format("Power: 1.01234567 ** 15"), t / iteration_limit, "ms")
+    print("{:<30}".format("Power: (pi/2) ** 15"), t / limit1, "ms")
 
     # Creation from integer
     n = n1._number
     d = n1._num_decimals
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit1):
         n3 = DecimalNumber(n, d)
     t = get_time_ms() - t
-    print("{:<30}".format("DecimalNumber from int:"), t / iteration_limit, "ms")
+    print("{:<30}".format("DecimalNumber from int:"), t / limit1, "ms")
 
     # Creation from string
     n = str(n1)
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit1):
         n3 = DecimalNumber(n)
     t = get_time_ms() - t
-    print("{:<30}".format("DecimalNumber from string:"), t / iteration_limit, "ms")
+    print("{:<30}".format("DecimalNumber from string:"), t / limit1, "ms")
 
 
     # From this point, the iterations are reduced
-    iteration_limit //= 100
-    print("{:<30}".format("Iterations per test:"), iteration_limit)
+    print("{:<30}".format("Iterations per test:"), limit2)
 
     # Sine
     n = DecimalNumber("0.54321")
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit2):
         n3 = n.sin()
     t = get_time_ms() - t
-    print("{:<30}".format("Sine: sin(" + str(n) + ")"), t / iteration_limit, "ms")
+    print("{:<30}".format("Sine: sin(" + str(n) + ")"), t / limit2, "ms")
 
     # Cosine
     n = DecimalNumber("0.54321")
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit2):
         n3 = n.sin()
     t = get_time_ms() - t
-    print("{:<30}".format("Cosine: cos(" + str(n) + ")"), t / iteration_limit, "ms")
+    print("{:<30}".format("Cosine: cos(" + str(n) + ")"), t / limit2, "ms")
 
     # Tangent
     n = DecimalNumber("0.54321")
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit2):
         n3 = n.tan()
     t = get_time_ms() - t
-    print("{:<30}".format("Tangent: tan(" + str(n) + ")"), t / iteration_limit, "ms")
+    print("{:<30}".format("Tangent: tan(" + str(n) + ")"), t / limit2, "ms")
 
     # Exponential
     n = DecimalNumber("12.345")
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit2):
         n3 = n.exp()
     t = get_time_ms() - t
-    print("{:<30}".format("Exponential: exp(" + str(n) + ")"), t / iteration_limit, "ms")
+    print("{:<30}".format("Exponential: exp(" + str(n) + ")"), t / limit2, "ms")
 
     # Natural logarithm
     n = DecimalNumber("12.345")
     t = get_time_ms()
-    for _ in range(0, iteration_limit):
+    for _ in range(0, limit2):
         n3 = n.exp()
     t = get_time_ms() - t
-    print("{:<30}".format("Natural logarithm: ln(" + str(n) + ")"), t / iteration_limit, "ms")
+    print("{:<30}".format("Natural logarithm: ln(" + str(n) + ")"), t / limit2, "ms")
 
 
 def perf_decimal_number_pi() -> None:
@@ -209,7 +209,14 @@ def print_title(title: str) -> None:
 
 print_title("SYSTEM INFORMATION")
 system_machine_info()
-print_title("PERFORMANCE OF DecimalNumber")
-perf_decimal_number()
+
+print_title("PERFORMANCE WITH SCALE = 16")
+DecimalNumber.set_scale(16)
+perf_decimal_number(iteration_limit, iteration_limit // 100)
+
+print_title("PERFORMANCE WITH SCALE = 50")
+DecimalNumber.set_scale(50)
+perf_decimal_number(iteration_limit2, iteration_limit2 // 100)
+
 print_title("CALCULATING PI")
 perf_decimal_number_pi()

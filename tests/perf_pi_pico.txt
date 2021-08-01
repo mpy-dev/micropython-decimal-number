@@ -7,29 +7,51 @@ Implementation platform:       rp2
 CPU frequency:                 125 Mhz
 
 +---------------------------------------------------------------+
-|  PERFORMANCE OF DecimalNumber                                 |
+|  PERFORMANCE WITH SCALE = 16                                  |
 +---------------------------------------------------------------+
 Scale (max. decimals):         16
 Iterations per test:           1000
-Number 1:                      736535650.5753823540755145
-Number 2:                      -1670847513.0063752217343218
-Addition (n1 + n2):            1.511 ms
-Subtraction (n1 - n2):         1.5 ms
-Multiplication (n1 * n2):      1.022 ms
-Division (n1 / n2):            0.982 ms
-Square root abs(n1):           3.39 ms
-Power: 1.01234567 ** 15        7.813 ms
-DecimalNumber from int:        0.307 ms
-DecimalNumber from string:     3.152 ms
+Number 1:                      603813228355.1655057136866035
+Number 2:                      -7232848158414.8347503515142385
+Addition (n1 + n2):            1.618 ms
+Subtraction (n1 - n2):         1.6 ms
+Multiplication (n1 * n2):      0.935 ms
+Division (n1 / n2):            0.986 ms
+Square root abs(n1):           3.9 ms
+Power: (pi/2) ** 15            9.263 ms
+DecimalNumber from int:        0.298 ms
+DecimalNumber from string:     3.462 ms
 Iterations per test:           10
 Sine: sin(0.54321)             73.9 ms
-Cosine: cos(0.54321)           73.0 ms
-Tangent: tan(0.54321)          151.9 ms
-Exponential: exp(12.345)       139.9 ms
-Natural logarithm: ln(12.345)  139.2 ms
+Cosine: cos(0.54321)           73.1 ms
+Tangent: tan(0.54321)          151.8 ms
+Exponential: exp(12.345)       139.2 ms
+Natural logarithm: ln(12.345)  140.1 ms
+
++---------------------------------------------------------------+
+|  PERFORMANCE WITH SCALE = 50                                  |
++---------------------------------------------------------------+
+Scale (max. decimals):         50
+Iterations per test:           400
+Number 1:                      88502442384212871560130148457312047.50164102506366254301508112421258370878638464858217
+Number 2:                      377715784837756766024273275184263330764.10114750705648418327501822118576458377808356334154
+Addition (n1 + n2):            1.8825 ms
+Subtraction (n1 - n2):         2.005 ms
+Multiplication (n1 * n2):      1.5325 ms
+Division (n1 / n2):            1.18 ms
+Square root abs(n1):           12.1575 ms
+Power: (pi/2) ** 15            11.2675 ms
+DecimalNumber from int:        0.35 ms
+DecimalNumber from string:     10.03 ms
+Iterations per test:           4
+Sine: sin(0.54321)             162.0 ms
+Cosine: cos(0.54321)           159.75 ms
+Tangent: tan(0.54321)          325.75 ms
+Exponential: exp(12.345)       263.0 ms
+Natural logarithm: ln(12.345)  262.75 ms
 
 +---------------------------------------------------------------+
 |  CALCULATING PI                                               |
 +---------------------------------------------------------------+
-Pi with 300 decimals:          5.438 s
+Pi with 300 decimals:          5.433 s
 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141274

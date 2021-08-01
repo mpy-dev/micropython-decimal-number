@@ -43,11 +43,11 @@ class DecimalNumber:
         https://docs.python.org/3/library/decimal.html#recipes
         """
         # If it is precalculated
-        if DecimalNumber.PI_SCALE >= DecimalNumber._scale:
+        if DecimalNumber.PI_SCALE >= DecimalNumber.get_scale():
             s: DecimalNumber = DecimalNumber(DecimalNumber.PI_NUMBER, DecimalNumber.PI_SCALE)
         else:
             # Calculates PI
-            scale: int = DecimalNumber._scale
+            scale: int = DecimalNumber.get_scale()
             # extra digits for intermediate steps
             DecimalNumber.set_scale(scale + 4)
             lasts = DecimalNumber(0)
@@ -76,10 +76,10 @@ class DecimalNumber:
     @classmethod
     def e(cls) -> "DecimalNumber":
         # If it is precalculated
-        if DecimalNumber.E_SCALE >= DecimalNumber._scale:
+        if DecimalNumber.E_SCALE >= DecimalNumber.get_scale():
             e: DecimalNumber = DecimalNumber(DecimalNumber.E_NUMBER, DecimalNumber.E_SCALE)
         else:
-            scale: int = DecimalNumber._scale
+            scale: int = DecimalNumber.get_scale()
             # extra digits for intermediate steps
             DecimalNumber.set_scale(scale + 4)
 
@@ -105,7 +105,7 @@ class DecimalNumber:
     def ln2(cls) -> "DecimalNumber":
         """Calculates ln(2)"""
         # If it is precalculated
-        if DecimalNumber.LN2_SCALE >= DecimalNumber._scale:
+        if DecimalNumber.LN2_SCALE >= DecimalNumber.get_scale():
             e: DecimalNumber =  DecimalNumber(DecimalNumber.LN2_NUMBER, DecimalNumber.LN2_SCALE)
         else:
             scale: int = DecimalNumber.get_scale()
@@ -157,8 +157,8 @@ class DecimalNumber:
         Expects |n| < 1 to converge rapidly
         """
         # if inc_scale:
-        #     scale: int = DecimalNumber._scale
-        #     DecimalNumber.set_scale(DecimalNumber._scale + 4) # extra digits for intermediate steps
+        #     scale: int = DecimalNumber.get_scale()
+        #     DecimalNumber.set_scale(DecimalNumber.get_scale() + 4) # extra digits for intermediate steps
         if n == 1:
             e = DecimalNumber.e()
         elif n == -1:
@@ -482,7 +482,7 @@ class DecimalNumber:
                 "No square root for negative numbers")
 
         num_integer: int = self._number
-        num_integer *= (10 ** (DecimalNumber._scale * 2))
+        num_integer *= (10 ** (DecimalNumber.get_scale() * 2))
         additional_decimals: int = 0
         if (self._num_decimals % 2) == 1:
             num_integer *= 10
@@ -491,7 +491,7 @@ class DecimalNumber:
         num_integer = DecimalNumber._isqrt(num_integer)
         n._number = num_integer
         n._num_decimals = (
-            (self._num_decimals + additional_decimals) // 2) + DecimalNumber._scale
+            (self._num_decimals + additional_decimals) // 2) + DecimalNumber.get_scale()
         #print(num_integer, n._num_decimals, n)
         n._reduce_to_scale()
         return n
@@ -612,10 +612,10 @@ class DecimalNumber:
         b_integer: int
         a_integer, b_integer = DecimalNumber._make_integer_comparable(self, other)
         if b_integer != 0:
-            c_factor: int = 10 ** (DecimalNumber._scale + 2)
+            c_factor: int = 10 ** (DecimalNumber.get_scale() + 2)
             c_integer: int = (a_integer * c_factor) // b_integer
             new_number = DecimalNumber(
-                c_integer, (DecimalNumber._scale + 2))
+                c_integer, (DecimalNumber.get_scale() + 2))
         else:
             raise DecimalNumberExceptionDivisionByZeroError("Division by zero")
         return new_number
@@ -637,12 +637,12 @@ class DecimalNumber:
         x._is_positive = True
         if other == 0:
             return DecimalNumber(1)
-        scale: int = DecimalNumber._scale
+        scale: int = DecimalNumber.get_scale()
         
         # Calculating the necessary extra scale:
         extra = abs(other) * (len(str(self._number)) - self._num_decimals)
         # extra digits for intermediate steps
-        DecimalNumber.set_scale(DecimalNumber._scale + extra)
+        DecimalNumber.set_scale(scale + extra)
         if other < 0:
             x = DecimalNumber(1) / x
             other = -other
@@ -654,7 +654,7 @@ class DecimalNumber:
             else:
                 y *= x
                 x *= x
-                other = (other - 1) / 2
+                other = (other - 1) // 2
         x *= y
         DecimalNumber.set_scale(scale)
         if not self._is_positive and (e % 2) == 1:
@@ -791,10 +791,10 @@ class DecimalNumber:
 
     def to_int_round(self) -> int:
         n = self.clone()
-        s = DecimalNumber._scale
-        DecimalNumber._scale = 0
+        s = DecimalNumber.get_scale()
+        DecimalNumber.set_scale(0)
         n._reduce_to_scale()
-        DecimalNumber._scale = s
+        DecimalNumber.set_scale(s)
         return n._number
 
     def to_string_thousands(self) -> str:
@@ -836,7 +836,7 @@ class DecimalNumber:
             self._num_decimals -= 1
 
     def _reduce_to_scale(self) -> None:
-        if self._num_decimals > DecimalNumber._scale:
+        if self._num_decimals > DecimalNumber.get_scale():
             # Round half to even: https://en.wikipedia.org/wiki/Rounding#Round_half_to_even
 
             # Example:
@@ -846,7 +846,7 @@ class DecimalNumber:
             #   It should be  123.457 ;  n = 123457, decimals = scale = 3
 
             n: int = self._number
-            s: int = self._num_decimals - DecimalNumber._scale  # s: 6 - 3 = 3
+            s: int = self._num_decimals - DecimalNumber.get_scale()  # s: 6 - 3 = 3
             ds: int = (10 ** s)
 
             v: int = n % (ds * 10)  # v: n % 10**4 =  6789      1000
@@ -866,7 +866,7 @@ class DecimalNumber:
                     x: int = ds - b
 
             self._number = (n + x) // ds
-            self._num_decimals = DecimalNumber._scale
+            self._num_decimals = DecimalNumber.get_scale()
 
         self._eliminate_decimal_trailing_zeros()
 
