@@ -323,8 +323,6 @@ class DecimalNumber:
     def tan(self) -> "DecimalNumber":
         """Calculates tan(x) = sin(x) / cos(x). x = radians """
         x = self.clone()
-        # scale: int = DecimalNumber.get_scale()
-        # DecimalNumber.set_scale(scale + 4) # extra digits for intermediate steps
 
         # Calculates x mod 2π
         pi = DecimalNumber.pi()
@@ -345,12 +343,70 @@ class DecimalNumber:
         s = x.sin()
         c = x.cos()
         if c == 0:
-            # DecimalNumber.set_scale(scale)
             raise DecimalNumberExceptionDivisionByZeroError("tan(x) = ±Infinite")
         else:
             t = s / c
-            # DecimalNumber.set_scale(scale)
             return +t
+
+    def asin(self) -> "DecimalNumber":
+        """Calculates asin(n)
+        """
+        if self >= -1 and self <= 1:
+            x = self.clone()
+            scale: int = DecimalNumber.get_scale()
+            DecimalNumber.set_scale(DecimalNumber.get_scale() + 4) # extra digits for intermediate steps
+
+            i = DecimalNumber(1)    # counter
+            one = DecimalNumber(1)
+            two = DecimalNumber(2)
+            four = DecimalNumber(4)
+            n = DecimalNumber(1)
+            d = DecimalNumber(1)
+            n2 = x.clone()
+            e = x.clone()
+            e2 = DecimalNumber(0)
+            counter: int = 0
+            while e2 != e:
+                e2.copy_from(e)
+                n *= i
+                i += two
+                d *= i - one
+                n2 *= x * x
+                e += (n * n2) / (d * i)
+
+            DecimalNumber.set_scale(scale)
+            return +e
+        else:
+            raise DecimalNumberExceptionMathDomainError("asin(x) admits -1 <= x <= 1 only")
+
+    def acos(self) -> "DecimalNumber":
+        """Calculates acos(n)
+        """
+
+        if self >= -1 and self <= 1:
+            scale: int = DecimalNumber.get_scale()
+            DecimalNumber.set_scale(DecimalNumber.get_scale() + 4) # extra digits for intermediate steps
+
+            # acos(n) = pi/2 - asin(x)
+            a = (DecimalNumber.pi() / 2) - self.asin()
+
+            DecimalNumber.set_scale(scale)
+            return +a
+        else:
+            raise DecimalNumberExceptionMathDomainError("acos(x) admits -1 <= x <= 1 only")
+
+    def atan(self) -> "DecimalNumber":
+        """Calculates atan(n)
+        It uses: atan(x) = asin( x / sqrt(1 + x * x) )
+        """
+        scale: int = DecimalNumber.get_scale()
+        DecimalNumber.set_scale(DecimalNumber.get_scale() + 4) # extra digits for intermediate steps
+        one = DecimalNumber(1)
+        v = self / (one + self * self).square_root()
+        a = v.asin()
+
+        DecimalNumber.set_scale(scale)
+        return +a
 
 
     @staticmethod

@@ -31,49 +31,55 @@ All the internal operations of **DecimalNumber** are done with integers (*int* b
     +---------------------------------------------------------------+
     Scale (max. decimals):         16
     Iterations per test:           1000
-    Number 1:                      603813228355.1655057136866035
-    Number 2:                      -7232848158414.8347503515142385
-    Addition (n1 + n2):            1.618 ms
-    Subtraction (n1 - n2):         1.6 ms
-    Multiplication (n1 * n2):      0.935 ms
-    Division (n1 / n2):            0.986 ms
-    Square root abs(n1):           3.9 ms
-    Power: (pi/2) ** 15            9.263 ms
-    DecimalNumber from int:        0.298 ms
-    DecimalNumber from string:     3.462 ms
+    Number 1:                      6168282555547.2665356180611533
+    Number 2:                      -6262250050511.8063054365344738
+    Addition (n1 + n2):            1.596 ms
+    Subtraction (n1 - n2):         1.636 ms
+    Multiplication (n1 * n2):      1.044 ms
+    Division (n1 / n2):            1.134 ms
+    Square root abs(n1):           3.833 ms
+    Power: (pi/2) ** 15            10.067 ms
+    DecimalNumber from int:        0.359 ms
+    DecimalNumber from string:     3.669 ms
     Iterations per test:           10
-    Sine: sin(0.54321)             73.9 ms
-    Cosine: cos(0.54321)           73.1 ms
-    Tangent: tan(0.54321)          151.8 ms
-    Exponential: exp(12.345)       139.2 ms
-    Natural logarithm: ln(12.345)  140.1 ms
+    Sine: sin(0.54321)             83.6 ms
+    Cosine: cos(0.54321)           82.5 ms
+    Tangent: tan(0.54321)          172.7 ms
+    Arcsine: asin(0.54321)         258.7 ms
+    Arccosine: acos(0.54321)       321.4 ms
+    Arctangent: atan(0.54321)      286.8 ms
+    Exponential: exp(12.345)       153.6 ms
+    Natural logarithm: ln(12.345)  153.6 ms
 
     +---------------------------------------------------------------+
     |  PERFORMANCE WITH SCALE = 50                                  |
     +---------------------------------------------------------------+
     Scale (max. decimals):         50
     Iterations per test:           400
-    Number 1:                      88502442384212871560130148457312047.50164102506366254301508112421258370878638464858217
-    Number 2:                      377715784837756766024273275184263330764.10114750705648418327501822118576458377808356334154
-    Addition (n1 + n2):            1.8825 ms
-    Subtraction (n1 - n2):         2.005 ms
-    Multiplication (n1 * n2):      1.5325 ms
-    Division (n1 / n2):            1.18 ms
-    Square root abs(n1):           12.1575 ms
-    Power: (pi/2) ** 15            11.2675 ms
-    DecimalNumber from int:        0.35 ms
-    DecimalNumber from string:     10.03 ms
+    Number 1:                      4102630150514078885171172412160012615517864.15061603038548458121763350374462467054537604684286
+    Number 2:                      -41481204122815468001552146755804481536.11455213043615726131720441506304341181137611244001
+    Addition (n1 + n2):            2.1325 ms
+    Subtraction (n1 - n2):         2.135 ms
+    Multiplication (n1 * n2):      1.5775 ms
+    Division (n1 / n2):            1.4425 ms
+    Square root abs(n1):           12.58 ms
+    Power: (pi/2) ** 15            12.11 ms
+    DecimalNumber from int:        0.37 ms
+    DecimalNumber from string:     11.2 ms
     Iterations per test:           4
-    Sine: sin(0.54321)             162.0 ms
-    Cosine: cos(0.54321)           159.75 ms
-    Tangent: tan(0.54321)          325.75 ms
-    Exponential: exp(12.345)       263.0 ms
-    Natural logarithm: ln(12.345)  262.75 ms
+    Sine: sin(0.54321)             181.5 ms
+    Cosine: cos(0.54321)           178.0 ms
+    Tangent: tan(0.54321)          363.5 ms
+    Arcsine: asin(0.54321)         812.2499 ms
+    Arccosine: acos(0.54321)       885.25 ms
+    Arctangent: atan(0.54321)      820.2499 ms
+    Exponential: exp(12.345)       287.75 ms
+    Natural logarithm: ln(12.345)  287.5 ms
 
     +---------------------------------------------------------------+
     |  CALCULATING PI                                               |
     +---------------------------------------------------------------+
-    Pi with 300 decimals:          5.433 s
+    Pi with 300 decimals:          5.774 s
     3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141274
 
 ## How to use
