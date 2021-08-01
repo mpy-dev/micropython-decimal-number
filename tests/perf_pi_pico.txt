@@ -11,19 +11,25 @@ CPU frequency:                 125 Mhz
 +---------------------------------------------------------------+
 Scale (max. decimals):         16
 Iterations per test:           1000
-Number 1:                      -35538508.685313420325041
-Number 2:                      -88138453.0826150738002763
-Addition (n1 + n2):            1.488 ms
-Subtraction (n1 - n2):         1.445 ms
-Multiplication (n1 * n2):      0.877 ms
-Division (n1 / n2):            1.197 ms
-Square root abs(n1):           3.454 ms
-Power: 1.01234567 ** 15        5.873 ms
-DecimalNumber from int:        0.261 ms
-DecimalNumber from string:     2.879 ms
+Number 1:                      736535650.5753823540755145
+Number 2:                      -1670847513.0063752217343218
+Addition (n1 + n2):            1.511 ms
+Subtraction (n1 - n2):         1.5 ms
+Multiplication (n1 * n2):      1.022 ms
+Division (n1 / n2):            0.982 ms
+Square root abs(n1):           3.39 ms
+Power: 1.01234567 ** 15        7.813 ms
+DecimalNumber from int:        0.307 ms
+DecimalNumber from string:     3.152 ms
+Iterations per test:           10
+Sine: sin(0.54321)             73.9 ms
+Cosine: cos(0.54321)           73.0 ms
+Tangent: tan(0.54321)          151.9 ms
+Exponential: exp(12.345)       139.9 ms
+Natural logarithm: ln(12.345)  139.2 ms
 
 +---------------------------------------------------------------+
 |  CALCULATING PI                                               |
 +---------------------------------------------------------------+
-Pi with 300 decimals:          5.884 s
+Pi with 300 decimals:          5.438 s
 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141274

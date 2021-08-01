@@ -217,8 +217,6 @@ class DecimalNumber:
         scale: int = DecimalNumber.get_scale()
         DecimalNumber.set_scale(scale + 4) # extra digits for intermediate steps
 
-        # sin(x) = x - x³/3! + x⁵/5! - x⁷/7! ...
-
         negative_radians: bool = (x < 0)
         if negative_radians:
             x = -x
@@ -244,6 +242,8 @@ class DecimalNumber:
         elif quadrant == 4:
             x = 2 * pi - x
 
+        # sin(x) = x - x³/3! + x⁵/5! - x⁷/7! ...
+
         i = DecimalNumber(1)    # counter
         two = DecimalNumber(2)
         n = x.clone()
@@ -266,6 +266,92 @@ class DecimalNumber:
 
         DecimalNumber.set_scale(scale)
         return +e
+
+    def cos(self) -> "DecimalNumber":
+        """Calculates cos(x). x = radians """
+        x = self.clone()
+        scale: int = DecimalNumber.get_scale()
+        DecimalNumber.set_scale(scale + 4) # extra digits for intermediate steps
+
+        if (x < 0): # cos(-x) = cos(x)
+            x = -x
+
+        # Calculates x mod 2π
+        pi = DecimalNumber.pi()
+        f: int = (x / (pi * 2)).to_int_truncate()
+        if f > 0:
+            x -= f * 2 * pi
+
+        # Determines the quadrant and reduces the range of x to 0 - π/2
+        half_pi = pi / 2
+        r = half_pi.clone()
+        quadrant: int = 1
+        while x > r:
+            r += half_pi
+            quadrant += 1
+
+        if quadrant == 2:
+            x = pi - x
+        elif quadrant == 3:
+            x = x - pi
+        elif quadrant == 4:
+            x = 2 * pi - x
+
+        # cos(x) = 1 - x²/2! + x⁴/4! - x⁶/6! ...
+
+        i = DecimalNumber(1)    # counter
+        two = DecimalNumber(2)
+        n = DecimalNumber(1)
+        d = DecimalNumber(1)
+        s = DecimalNumber(1)
+        e = n.clone()
+        e2 = DecimalNumber(0)
+        while e2 != e:
+            e2.copy_from(e)
+            n *= x * x
+            d *= i * (i + 1)
+            i += two
+            s = -s
+            e += (n * s) / d
+
+        if quadrant == 2 or quadrant == 3:
+            e = -e
+
+        DecimalNumber.set_scale(scale)
+        return +e
+
+    def tan(self) -> "DecimalNumber":
+        """Calculates tan(x) = sin(x) / cos(x). x = radians """
+        x = self.clone()
+        # scale: int = DecimalNumber.get_scale()
+        # DecimalNumber.set_scale(scale + 4) # extra digits for intermediate steps
+
+        # Calculates x mod 2π
+        pi = DecimalNumber.pi()
+        f: int = (x / (pi * 2)).to_int_truncate()
+        if f > 0:
+            x -= f * 2 * pi
+
+        # Determines the quadrant
+        half_pi = pi / 2
+        r = half_pi.clone()
+        quadrant: int = 1
+        while x > r:
+            r += half_pi
+            quadrant += 1
+
+        # tan(x) = sin(x) / cos(x) ; if cos(x) == 0  =>  tan(x) = ∞
+
+        s = x.sin()
+        c = x.cos()
+        if c == 0:
+            # DecimalNumber.set_scale(scale)
+            raise DecimalNumberExceptionDivisionByZeroError("tan(x) = ±Infinite")
+        else:
+            t = s / c
+            # DecimalNumber.set_scale(scale)
+            return +t
+
 
     @staticmethod
     def version() -> str:

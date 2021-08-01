@@ -134,11 +134,36 @@ def perf_decimal_number() -> None:
     for _ in range(0, iteration_limit):
         n3 = DecimalNumber(n)
     t = get_time_ms() - t
-    print("{:<30}".format("DecimalNumber from string:"),
-          t / iteration_limit, "ms")
+    print("{:<30}".format("DecimalNumber from string:"), t / iteration_limit, "ms")
+
 
     # From this point, the iterations are reduced
     iteration_limit //= 100
+    print("{:<30}".format("Iterations per test:"), iteration_limit)
+
+    # Sine
+    n = DecimalNumber("0.54321")
+    t = get_time_ms()
+    for _ in range(0, iteration_limit):
+        n3 = n.sin()
+    t = get_time_ms() - t
+    print("{:<30}".format("Sine: sin(" + str(n) + ")"), t / iteration_limit, "ms")
+
+    # Cosine
+    n = DecimalNumber("0.54321")
+    t = get_time_ms()
+    for _ in range(0, iteration_limit):
+        n3 = n.sin()
+    t = get_time_ms() - t
+    print("{:<30}".format("Cosine: cos(" + str(n) + ")"), t / iteration_limit, "ms")
+
+    # Tangent
+    n = DecimalNumber("0.54321")
+    t = get_time_ms()
+    for _ in range(0, iteration_limit):
+        n3 = n.tan()
+    t = get_time_ms() - t
+    print("{:<30}".format("Tangent: tan(" + str(n) + ")"), t / iteration_limit, "ms")
 
     # Exponential
     n = DecimalNumber("12.345")
@@ -147,7 +172,6 @@ def perf_decimal_number() -> None:
         n3 = n.exp()
     t = get_time_ms() - t
     print("{:<30}".format("Exponential: exp(" + str(n) + ")"), t / iteration_limit, "ms")
-
 
     # Natural logarithm
     n = DecimalNumber("12.345")
