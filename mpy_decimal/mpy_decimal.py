@@ -330,8 +330,9 @@ class DecimalNumber:
         if f > 0:
             x -= f * 2 * pi
 
-        # Determines the quadrant
         half_pi = pi / 2
+        three_halves_pi = (3 * pi) / 2
+        # Determines the quadrant
         r = half_pi.clone()
         quadrant: int = 1
         while x > r:
@@ -340,18 +341,37 @@ class DecimalNumber:
 
         # tan(x) = sin(x) / cos(x) ; if cos(x) == 0  =>  tan(x) = ∞
 
-        s = x.sin()
-        c = x.cos()
-        if c == 0:
+        if self == half_pi or self == three_halves_pi:
             raise DecimalNumberExceptionDivisionByZeroError("tan(x) = ±Infinite")
         else:
-            t = s / c
-            return +t
+            scale: int = DecimalNumber.get_scale()
+            DecimalNumber.set_scale(scale + 4)
+            s = x.sin()
+            c = x.cos()
+            if c == 0:
+                DecimalNumber.set_scale(scale)
+                raise DecimalNumberExceptionDivisionByZeroError("tan(x) = ±Infinite")
+            else:
+                t = s / c
+                DecimalNumber.set_scale(scale)
+                return +t
 
     def asin(self) -> "DecimalNumber":
         """Calculates asin(n)
+
+        TODO:   if |n| between 0 and 0.707: arcsin(x) using series
+                if |n| between 0.707 and 1: arcsin(x) = pi/2 - arcsin( sqrt(1 - x²) )
+                This guarantees arcsin(x) using series with x <= 0.707 (sqrt(1/2)).
+                The series for arcsin(x) converges very slowly for |x| near 1.
         """
         if self >= -1 and self <= 1:
+            if self == -1:
+                return -(DecimalNumber.pi() / 2)
+            elif self == 1:
+                return (DecimalNumber.pi() / 2)
+            elif self == 0:
+                return DecimalNumber(0)
+
             x = self.clone()
             scale: int = DecimalNumber.get_scale()
             DecimalNumber.set_scale(DecimalNumber.get_scale() + 4) # extra digits for intermediate steps
