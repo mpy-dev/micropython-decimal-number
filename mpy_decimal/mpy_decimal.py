@@ -397,7 +397,7 @@ class DecimalNumber:
 
     def atan(self) -> "DecimalNumber":
         """Calculates atan(n)
-        It uses: atan(x) = asin( x / sqrt(1 + x * x) )
+        It uses: atan(x) = asin( x / sqrt(1 + x²) )
         """
         scale: int = DecimalNumber.get_scale()
         DecimalNumber.set_scale(DecimalNumber.get_scale() + 4) # extra digits for intermediate steps
