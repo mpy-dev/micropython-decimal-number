@@ -308,6 +308,44 @@ print(a > 0)    # True
 print(1 > b)    # False
 ```
 
+### Other mathematical functions ###
+
+**exp()**: exponetial function e<sup>x</sup>.
+
+**ln()**: natural logarithm (base e).
+
+**Trigonometric functions**:
+
+**sin()**: sine.
+
+**cos()**: cosine.
+
+**tan()**: tangent.
+
+The argument of trigonometric functions sin(), cos() and tan() is an angle expressed in radians.
+
+**asin()**: arcsine.
+
+**acos()**: arccosine.
+
+**atan()**: arctangent.
+
+The functions asin(), acos() and atan() return an angle in radians.
+
+Example:
+
+```python
+n = DecimalNumber("0.732")
+n.exp()     # 2.0792349218188443
+n.ln()      # -0.3119747650208255
+n.sin()     # 0.6683586490759965
+n.cos()     # 0.7438391736157144
+n.tan()     # 0.8985257469396026
+n.asin()    # 0.821252884452186
+n.acos()    # 0.7495434423427106
+n.atan()    # 0.6318812315412357
+```
+
 ### Other methods ###
 
 **to_int_truncate()** returns and *int* that contains the integer part of a **DecimalNumber** after truncating the decimals.
@@ -354,13 +392,22 @@ print(a is b)   # False: they are different objects.
 ```python
 pi = DecimalNumber.pi()         # Default scale, equal to 16
 print(DecimalNumber.pi())       # 3.1415926535897932
-DecimalNumber.set_scale(30)     # Set scale = 36
+DecimalNumber.set_scale(36)     # Set scale = 36
 print(DecimalNumber.pi())       # 3.141592653589793238462643383279502884
 ```
 
 PI is precalculated with 100 decimals and stored in the class. If **pi()** method is used with **scale** <= 100, PI is not calculated, but returned using the precalculated value. If **scale** is set to a value greater than 100, for example, 300, PI is calculated, stored in the class and returned. After that, the precalculated limit is 300 instead of 100, and any call to **pi()** with a **scale** <= 300 returns the value of PI from the precalculated value.
 
 To calculate PI, this method uses the very fast algorithm present on the section [Recipes](https://docs.python.org/3/library/decimal.html#recipes) of the documentation for the module **decimal**, part of Python Standard Library.
+
+**e()** is a class method that returns the number e number, the base of natural logarithms, with as many decimals as the **scale** of **DecimalNumber**. Its value is precalculated and it functions in a similar way as pi(). Example:
+
+```python
+e = DecimalNumber.e()           # Default scale, equal to 16
+print(DecimalNumber.pi())       # 2.7182818284590452
+DecimalNumber.set_scale(36)     # Set scale = 36
+print(DecimalNumber.e())        # 2.718281828459045235360287471352662498
+```
 
 ### Other considerations ###
 
@@ -379,7 +426,6 @@ Try this using Micropython (I have used a Raspberry Pi Pico):
 # Compares 10¹¹ * 10⁻² to 10⁹, which should be True
 print( (1e11 * 1e-2) == 1e9 )       # False!!!
 ```
-
 
 
 ## Exceptions ##
@@ -476,5 +522,16 @@ This is what the program prints:
 
 ## Using DecimalNumber on a Micropython board ##
 
+This is not exactly part of this module, but someone might find it useful.
 
+**".mpy" files**: a micropython board can run ".py" files directly. It compiles them before executing them, and that takes time. It is a good practice to copy to your micropython board a precompile version, a ".mpy" file.
 
+You can compile the Python file "mpy_decimal.py", that contains all the functionality of **DecimalNumber**, before copy it to your micropython board:
+
+```shell
+python -m mpy_cross mpy_decimal.py
+```
+
+It creates the file "mpy_decimal.mpy". You should have **mpy_cross** installed. More information at: [pypi.org](https://pypi.org/project/mpy-cross/)
+
+The next step is copying the ".mpy" file to your micropython board. You can copy python source code files with an editor, for example [**Thonny**](https://thonny.org/), but it does not copy (as of today) ".mpy" files. The tool [**mpy-repl-tool[mount]**](https://mpy-repl-tool.readthedocs.io/en/latest/index.html) can help you connect your computer to your micropython board. It also allows to mount your board and use it as any other disk or memory unit of your computer.
