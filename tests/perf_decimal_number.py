@@ -175,7 +175,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     print("{:<30}".format("Arcsine: asin(" + str(n) + ")"), t / limit2, "ms")
 
     # Arccosine
-    n = DecimalNumber("0.54321")
+    n = DecimalNumber("0.65432")
     t = get_time_ms()
     for _ in range(0, limit2):
         n3 = n.acos()
@@ -183,7 +183,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     print("{:<30}".format("Arccosine: acos(" + str(n) + ")"), t / limit2, "ms")
 
     # Arctangent
-    n = DecimalNumber("0.54321")
+    n = DecimalNumber("1.2345")
     t = get_time_ms()
     for _ in range(0, limit2):
         n3 = n.atan()

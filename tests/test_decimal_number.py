@@ -238,6 +238,21 @@ class TestDecimalNumber():
                 failed = True
             if not self.assertEqual(aa, cc, "Incorrect addition to itself for ({0} + {1})".format(str(a), str(b))):
                 failed = True
+
+        # Addition with integers
+        one_int: int = 1
+        minus_one_int: int = -1
+        three = DecimalNumber(3)
+        minus_three = DecimalNumber(-3)
+        if not self.assertEqual(one_int + three, DecimalNumber("4"), "Incorrect addition for ({0} + {1})".format(one_int, three)):
+            failed = True
+        if not self.assertEqual(one_int + minus_three, DecimalNumber("-2"), "Incorrect addition for ({0} + {1})".format(one_int, minus_three)):
+            failed = True
+        if not self.assertEqual(minus_one_int + three, DecimalNumber("2"), "Incorrect addition for ({0} + {1})".format(minus_one_int, three)):
+            failed = True
+        if not self.assertEqual(minus_one_int + minus_three, DecimalNumber("-4"), "Incorrect addition for ({0} + {1})".format(minus_one_int, minus_three)):
+            failed = True
+
         return failed
 
     def test_sub_iub(self) -> bool:
@@ -287,6 +302,21 @@ class TestDecimalNumber():
                 failed = True
             if not self.assertEqual(aa, cc, "Incorrect subtruction from itself for ({0} - {1})".format(str(a), str(b))):
                 failed = True
+
+        # Subtruction with integers
+        one_int: int = 1
+        minus_one_int: int = -1
+        three = DecimalNumber(3)
+        minus_three = DecimalNumber(-3)
+        if not self.assertEqual(one_int - three, DecimalNumber("-2"), "Incorrect subtruction for ({0} + {1})".format(one_int, three)):
+            failed = True
+        if not self.assertEqual(one_int - minus_three, DecimalNumber("4"), "Incorrect subtruction for ({0} + {1})".format(one_int, minus_three)):
+            failed = True
+        if not self.assertEqual(minus_one_int - three, DecimalNumber("-4"), "Incorrect subtruction for ({0} + {1})".format(minus_one_int, three)):
+            failed = True
+        if not self.assertEqual(minus_one_int - minus_three, DecimalNumber("2"), "Incorrect subtruction for ({0} + {1})".format(minus_one_int, minus_three)):
+            failed = True
+
         return failed
 
     def test_mul_imul(self) -> bool:
@@ -335,6 +365,21 @@ class TestDecimalNumber():
                 failed = True
             if not self.assertEqual(aa, cc, "Incorrect multiplication by itself for ({0} - {1})".format(str(a), str(b))):
                 failed = True
+
+        # Multiplication with integers
+        one_int: int = 1
+        minus_one_int: int = -1
+        three = DecimalNumber(3)
+        minus_three = DecimalNumber(-3)
+        if not self.assertEqual(one_int * three, DecimalNumber("3"), "Incorrect multiplication for ({0} + {1})".format(one_int, three)):
+            failed = True
+        if not self.assertEqual(one_int * minus_three, DecimalNumber("-3"), "Incorrect multiplication for ({0} + {1})".format(one_int, minus_three)):
+            failed = True
+        if not self.assertEqual(minus_one_int * three, DecimalNumber("-3"), "Incorrect multiplication for ({0} + {1})".format(minus_one_int, three)):
+            failed = True
+        if not self.assertEqual(minus_one_int * minus_three, DecimalNumber("3"), "Incorrect multiplication for ({0} + {1})".format(minus_one_int, minus_three)):
+            failed = True
+
         return failed
 
     def test_truediv(self) -> bool:
@@ -394,6 +439,20 @@ class TestDecimalNumber():
         DecimalNumber.set_scale(scale)
 
         if not self.assertRaises(DecimalNumberExceptionDivisionByZeroError, lambda: DecimalNumber(1) / DecimalNumber(0)):
+            failed = True
+
+        # Multiplication with integers
+        one_int: int = 1
+        minus_one_int: int = -1
+        five = DecimalNumber(5)
+        minus_five = DecimalNumber(-5)
+        if not self.assertEqual(one_int / five, DecimalNumber("0.2"), "Incorrect multiplication for ({0} + {1})".format(one_int, five)):
+            failed = True
+        if not self.assertEqual(one_int / minus_five, DecimalNumber("-0.2"), "Incorrect multiplication for ({0} + {1})".format(one_int, minus_five)):
+            failed = True
+        if not self.assertEqual(minus_one_int / five, DecimalNumber("-0.2"), "Incorrect multiplication for ({0} + {1})".format(minus_one_int, five)):
+            failed = True
+        if not self.assertEqual(minus_one_int / minus_five, DecimalNumber("0.2"), "Incorrect multiplication for ({0} + {1})".format(minus_one_int, minus_five)):
             failed = True
 
         return failed
@@ -1141,7 +1200,7 @@ class TestDecimalNumber():
         return failed
 
     def test_asin(self) -> bool:
-        """Tests tan()
+        """Tests asin()
         It tests a list of numbers calculating asin(number)
         and checking the expected result.
         """
@@ -1184,23 +1243,85 @@ class TestDecimalNumber():
 
     def test_acos(self) -> bool:
         """Tests acos()
-
-            TODO
-
+        It tests a list of numbers calculating acos(number)
+        and checking the expected result.
         """
         self.test_counter += 1
         failed: bool = False
+
+        list_numbers = [
+            ('-1',   '3.14159265358979323846264338327950288419716939937511'),
+            ('-0.9', '2.69056584179353080591799874748515105799374688609086'),
+            ('-0.8', '2.49809154479650885165983415456218024615565880825979'),
+            ('-0.7', '2.34619382340564968297167504435473855565437343832871'),
+            ('-0.6', '2.21429743558818100603413092035707408014009529080287'),
+            ('-0.5', '2.09439510239319549230842892218633525613144626625007'),
+            ('-0.4', '1.98231317286238463861605958925708704695428583481458'),
+            ('-0.3', '1.87548898081029412720332465286728060905314473139433'),
+            ('-0.2', '1.77215424758522741068644724385737485233862278108978'),
+            ('-0.1', '1.67096374795645641557684487109244476066726067191718'),
+            ('0',    '1.57079632679489661923132169163975144209858469968755'),
+            ('0.1',  '1.47062890563333682288579851218705812352990872745792'),
+            ('0.2',  '1.36943840600456582777619613942212803185854661828532'),
+            ('0.3',  '1.26610367277949911125931873041222227514402466798078'),
+            ('0.4',  '1.15927948072740859984658379402241583724288356456053'),
+            ('0.5',  '1.04719755119659774615421446109316762806572313312504'),
+            ('0.6',  '0.92729521800161223242851246292242880405707410857224'),
+            ('0.7',  '0.79539883018414355549096833892476432854279596104639'),
+            ('0.8',  '0.64350110879328438680280922871732263804151059111531'),
+            ('0.9',  '0.45102681179626243254464463579435182620342251328425'),
+            ('1.0',  '0')
+        ]
+
+        current_scale: int = DecimalNumber.get_scale()
+        DecimalNumber.set_scale(50)
+        for n in list_numbers:
+            a = str(DecimalNumber(n[0]).acos())
+            if not self.assertEqual(a, n[1], "Error calculating acos({0})".format(n[0])):
+                failed = True
+        DecimalNumber.set_scale(current_scale)
 
         return failed
 
     def test_atan(self) -> bool:
-        """Tests exp()
-
-            TODO
-
+        """Tests atan()
+        It tests a list of numbers calculating acos(number)
+        and checking the expected result.
         """
         self.test_counter += 1
         failed: bool = False
+
+        list_numbers = [
+            ('-1',   '-0.78539816339744830961566084581987572104929234984378'),
+            ('-0.9', '-0.73281510178650659164079207273428025198575567935826'),
+            ('-0.8', '-0.67474094222355266305652097360981361507400625484071'),
+            ('-0.7', '-0.61072596438920861654375887649023609381850306612883'),
+            ('-0.6', '-0.54041950027058415544357836460859991013514825146259'),
+            ('-0.5', '-0.46364760900080611621425623146121440202853705428612'),
+            ('-0.4', '-0.3805063771123648863035879168104331044974057136581'),
+            ('-0.3', '-0.29145679447786709199560462143289119350316759901207'),
+            ('-0.2', '-0.19739555984988075837004976519479029344758510378785'),
+            ('-0.1', '-0.09966865249116202737844611987802059024327832250431'),
+            ('0',     '0'),
+            ('0.1',   '0.09966865249116202737844611987802059024327832250431'),
+            ('0.2',   '0.19739555984988075837004976519479029344758510378785'),
+            ('0.3',   '0.29145679447786709199560462143289119350316759901207'),
+            ('0.4',   '0.3805063771123648863035879168104331044974057136581'),
+            ('0.5',   '0.46364760900080611621425623146121440202853705428612'),
+            ('0.6',   '0.54041950027058415544357836460859991013514825146259'),
+            ('0.7',   '0.61072596438920861654375887649023609381850306612883'),
+            ('0.8',   '0.67474094222355266305652097360981361507400625484071'),
+            ('0.9',   '0.73281510178650659164079207273428025198575567935826'),
+            ('1.0',   '0.78539816339744830961566084581987572104929234984378')
+        ]
+
+        current_scale: int = DecimalNumber.get_scale()
+        DecimalNumber.set_scale(50)
+        for n in list_numbers:
+            a = str(DecimalNumber(n[0]).atan())
+            if not self.assertEqual(a, n[1], "Error calculating acos({0})".format(n[0])):
+                failed = True
+        DecimalNumber.set_scale(current_scale)
 
         return failed
 

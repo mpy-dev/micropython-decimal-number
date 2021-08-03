@@ -361,7 +361,7 @@ class DecimalNumber:
 
         TODO:   if |n| between 0 and 0.707: arcsin(x) using series
                 if |n| between 0.707 and 1: arcsin(x) = pi/2 - arcsin( sqrt(1 - x²) )
-                This guarantees arcsin(x) using series with x <= 0.707 (sqrt(1/2)).
+                This guarantees arcsin(x) using series with x <= 0.707 ; (sqrt(1/2)).
                 The series for arcsin(x) converges very slowly for |x| near 1.
         """
         if self >= -1 and self <= 1:
@@ -372,10 +372,16 @@ class DecimalNumber:
             elif self == 0:
                 return DecimalNumber(0)
 
-            x = self.clone()
             scale: int = DecimalNumber.get_scale()
             DecimalNumber.set_scale(DecimalNumber.get_scale() + 4) # extra digits for intermediate steps
 
+            trick: bool = False
+            if abs(self) > DecimalNumber("0.707"):
+                trick = True
+                x = (1 - self * self).square_root()
+            else:                
+                x = self.clone()
+            
             i = DecimalNumber(1)    # counter
             one = DecimalNumber(1)
             two = DecimalNumber(2)
@@ -393,6 +399,12 @@ class DecimalNumber:
                 d *= i - one
                 n2 *= x * x
                 e += (n * n2) / (d * i)
+
+            if trick:
+                if self._is_positive:
+                    e = DecimalNumber.pi() / 2 - e
+                else:
+                    e = e - DecimalNumber.pi() / 2
 
             DecimalNumber.set_scale(scale)
             return +e
@@ -657,7 +669,7 @@ class DecimalNumber:
         return self
 
     def __rsub__(self, other: int) -> "DecimalNumber":
-        return self.__sub__(DecimalNumber(other))
+        return DecimalNumber(other).__sub__(self)
 
     def __mul__(self, other: "DecimalNumber") -> "DecimalNumber":
         if isinstance(other, int):
