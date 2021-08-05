@@ -34,7 +34,6 @@ def system_machine_info() -> None:
         print("{:<30}".format("CPU frequency:"),
               machine.freq() // 1000000, "Mhz")
 
-
 def get_time_ms() -> int:
     """It gets the time in miliseconds.
     The way to get it depends on the implementation."""
@@ -42,7 +41,6 @@ def get_time_ms() -> int:
         return round(time.time() * 1000)
     if sys.implementation.name == "micropython":
         return utime.ticks_ms()
-
 
 def gen_random_number() -> DecimalNumber:
     """Generates a random number with a number of decimals equal to scale.
@@ -58,7 +56,6 @@ def gen_random_number() -> DecimalNumber:
     if random.randrange(0, 2) == 0:
         n = -n
     return DecimalNumber(n, DecimalNumber.get_scale())
-
 
 def perf_decimal_number(limit1: int, limit2: int) -> None:
     global iteration_limit
@@ -206,7 +203,6 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     t = get_time_ms() - t
     print("{:<30}".format("Natural logarithm: ln(" + str(n) + ")"), t / limit2, "ms")
 
-
 def perf_decimal_number_pi() -> None:
     """Performance of the calculation of PI."""
     global pi_decimals
@@ -222,7 +218,6 @@ def perf_decimal_number_pi() -> None:
     print("{:<30}".format("Pi with " + str(pi_decimals) + " decimals:"), t/1000, "s")
     print(pi)
     DecimalNumber.set_scale(current_scale)
-
 
 def print_title(title: str) -> None:
     """Auxiliary function to print a title."""

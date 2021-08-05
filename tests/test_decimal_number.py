@@ -240,18 +240,19 @@ class TestDecimalNumber():
                 failed = True
 
         # Addition with integers
-        one_int: int = 1
-        minus_one_int: int = -1
-        three = DecimalNumber(3)
-        minus_three = DecimalNumber(-3)
-        if not self.assertEqual(one_int + three, DecimalNumber("4"), "Incorrect addition for ({0} + {1})".format(one_int, three)):
-            failed = True
-        if not self.assertEqual(one_int + minus_three, DecimalNumber("-2"), "Incorrect addition for ({0} + {1})".format(one_int, minus_three)):
-            failed = True
-        if not self.assertEqual(minus_one_int + three, DecimalNumber("2"), "Incorrect addition for ({0} + {1})".format(minus_one_int, three)):
-            failed = True
-        if not self.assertEqual(minus_one_int + minus_three, DecimalNumber("-4"), "Incorrect addition for ({0} + {1})".format(minus_one_int, minus_three)):
-            failed = True
+        if sys.implementation.name == "cpython":
+            one_int: int = 1
+            minus_one_int: int = -1
+            three = DecimalNumber(3)
+            minus_three = DecimalNumber(-3)
+            if not self.assertEqual(one_int + three, DecimalNumber("4"), "Incorrect addition for ({0} + {1})".format(one_int, three)):
+                failed = True
+            if not self.assertEqual(one_int + minus_three, DecimalNumber("-2"), "Incorrect addition for ({0} + {1})".format(one_int, minus_three)):
+                failed = True
+            if not self.assertEqual(minus_one_int + three, DecimalNumber("2"), "Incorrect addition for ({0} + {1})".format(minus_one_int, three)):
+                failed = True
+            if not self.assertEqual(minus_one_int + minus_three, DecimalNumber("-4"), "Incorrect addition for ({0} + {1})".format(minus_one_int, minus_three)):
+                failed = True
 
         return failed
 
@@ -304,18 +305,19 @@ class TestDecimalNumber():
                 failed = True
 
         # Subtruction with integers
-        one_int: int = 1
-        minus_one_int: int = -1
-        three = DecimalNumber(3)
-        minus_three = DecimalNumber(-3)
-        if not self.assertEqual(one_int - three, DecimalNumber("-2"), "Incorrect subtruction for ({0} + {1})".format(one_int, three)):
-            failed = True
-        if not self.assertEqual(one_int - minus_three, DecimalNumber("4"), "Incorrect subtruction for ({0} + {1})".format(one_int, minus_three)):
-            failed = True
-        if not self.assertEqual(minus_one_int - three, DecimalNumber("-4"), "Incorrect subtruction for ({0} + {1})".format(minus_one_int, three)):
-            failed = True
-        if not self.assertEqual(minus_one_int - minus_three, DecimalNumber("2"), "Incorrect subtruction for ({0} + {1})".format(minus_one_int, minus_three)):
-            failed = True
+        if sys.implementation.name == "cpython":
+            one_int: int = 1
+            minus_one_int: int = -1
+            three = DecimalNumber(3)
+            minus_three = DecimalNumber(-3)
+            if not self.assertEqual(one_int - three, DecimalNumber("-2"), "Incorrect subtruction for ({0} - {1})".format(one_int, three)):
+                failed = True
+            if not self.assertEqual(one_int - minus_three, DecimalNumber("4"), "Incorrect subtruction for ({0} - {1})".format(one_int, minus_three)):
+                failed = True
+            if not self.assertEqual(minus_one_int - three, DecimalNumber("-4"), "Incorrect subtruction for ({0} - {1})".format(minus_one_int, three)):
+                failed = True
+            if not self.assertEqual(minus_one_int - minus_three, DecimalNumber("2"), "Incorrect subtruction for ({0} - {1})".format(minus_one_int, minus_three)):
+                failed = True
 
         return failed
 
@@ -367,18 +369,19 @@ class TestDecimalNumber():
                 failed = True
 
         # Multiplication with integers
-        one_int: int = 1
-        minus_one_int: int = -1
-        three = DecimalNumber(3)
-        minus_three = DecimalNumber(-3)
-        if not self.assertEqual(one_int * three, DecimalNumber("3"), "Incorrect multiplication for ({0} + {1})".format(one_int, three)):
-            failed = True
-        if not self.assertEqual(one_int * minus_three, DecimalNumber("-3"), "Incorrect multiplication for ({0} + {1})".format(one_int, minus_three)):
-            failed = True
-        if not self.assertEqual(minus_one_int * three, DecimalNumber("-3"), "Incorrect multiplication for ({0} + {1})".format(minus_one_int, three)):
-            failed = True
-        if not self.assertEqual(minus_one_int * minus_three, DecimalNumber("3"), "Incorrect multiplication for ({0} + {1})".format(minus_one_int, minus_three)):
-            failed = True
+        if sys.implementation.name == "cpython":
+            one_int: int = 1
+            minus_one_int: int = -1
+            three = DecimalNumber(3)
+            minus_three = DecimalNumber(-3)
+            if not self.assertEqual(one_int * three, DecimalNumber("3"), "Incorrect multiplication for ({0} * {1})".format(one_int, three)):
+                failed = True
+            if not self.assertEqual(one_int * minus_three, DecimalNumber("-3"), "Incorrect multiplication for ({0} * {1})".format(one_int, minus_three)):
+                failed = True
+            if not self.assertEqual(minus_one_int * three, DecimalNumber("-3"), "Incorrect multiplication for ({0} * {1})".format(minus_one_int, three)):
+                failed = True
+            if not self.assertEqual(minus_one_int * minus_three, DecimalNumber("3"), "Incorrect multiplication for ({0} * {1})".format(minus_one_int, minus_three)):
+                failed = True
 
         return failed
 
@@ -441,19 +444,20 @@ class TestDecimalNumber():
         if not self.assertRaises(DecimalNumberExceptionDivisionByZeroError, lambda: DecimalNumber(1) / DecimalNumber(0)):
             failed = True
 
-        # Multiplication with integers
-        one_int: int = 1
-        minus_one_int: int = -1
-        five = DecimalNumber(5)
-        minus_five = DecimalNumber(-5)
-        if not self.assertEqual(one_int / five, DecimalNumber("0.2"), "Incorrect multiplication for ({0} + {1})".format(one_int, five)):
-            failed = True
-        if not self.assertEqual(one_int / minus_five, DecimalNumber("-0.2"), "Incorrect multiplication for ({0} + {1})".format(one_int, minus_five)):
-            failed = True
-        if not self.assertEqual(minus_one_int / five, DecimalNumber("-0.2"), "Incorrect multiplication for ({0} + {1})".format(minus_one_int, five)):
-            failed = True
-        if not self.assertEqual(minus_one_int / minus_five, DecimalNumber("0.2"), "Incorrect multiplication for ({0} + {1})".format(minus_one_int, minus_five)):
-            failed = True
+        # Division with integers
+        if sys.implementation.name == "cpython":
+            one_int: int = 1
+            minus_one_int: int = -1
+            five = DecimalNumber(5)
+            minus_five = DecimalNumber(-5)
+            if not self.assertEqual(one_int / five, DecimalNumber("0.2"), "Incorrect division for ({0} / {1})".format(one_int, five)):
+                failed = True
+            if not self.assertEqual(one_int / minus_five, DecimalNumber("-0.2"), "Incorrect division for ({0} / {1})".format(one_int, minus_five)):
+                failed = True
+            if not self.assertEqual(minus_one_int / five, DecimalNumber("-0.2"), "Incorrect division for ({0} / {1})".format(minus_one_int, five)):
+                failed = True
+            if not self.assertEqual(minus_one_int / minus_five, DecimalNumber("0.2"), "Incorrect division for ({0} / {1})".format(minus_one_int, minus_five)):
+                failed = True
 
         return failed
 
@@ -572,16 +576,16 @@ class TestDecimalNumber():
         n1 = DecimalNumber("12.3")
         n1b: int = 12
         n2 = DecimalNumber("-0.98765")
-        n2b: int = -1
 
         if not self.assertFalse(n1 < n2, "Error evaluating {0} < {1}".format(n1, n2)):
             failed = True
         if not self.assertTrue(n2 < n1, "Error evaluating {0} < {1}".format(n2, n1)):
             failed = True
-        if not self.assertFalse(n1b < n2, "Error evaluating {0} < {1}".format(n1b, n2)):
-            failed = True
-        if not self.assertTrue(n2 < n1b, "Error evaluating {0} < {1}".format(n2, n1b)):
-            failed = True
+        if sys.implementation.name == "cpython":
+            if not self.assertFalse(n1b < n2, "Error evaluating {0} < {1}".format(n1b, n2)):
+                failed = True
+            if not self.assertTrue(n2 < n1b, "Error evaluating {0} < {1}".format(n2, n1b)):
+                failed = True
 
         if not self.assertFalse(n1 <= n2, "Error evaluating {0} <= {1}".format(n1, n2)):
             failed = True
@@ -591,10 +595,11 @@ class TestDecimalNumber():
             failed = True
         if not self.assertTrue(n2 <= n2, "Error evaluating {0} <= {1}".format(n2, n2)):
             failed = True
-        if not self.assertFalse(n1b <= n2, "Error evaluating {0} <= {1}".format(n1b, n2)):
-            failed = True
-        if not self.assertTrue(n2 <= n1b, "Error evaluating {0} <= {1}".format(n1, n1b)):
-            failed = True
+        if sys.implementation.name == "cpython":
+            if not self.assertFalse(n1b <= n2, "Error evaluating {0} <= {1}".format(n1b, n2)):
+                failed = True
+            if not self.assertTrue(n2 <= n1b, "Error evaluating {0} <= {1}".format(n1, n1b)):
+                failed = True
 
         if not self.assertFalse(n1 == n2, "Error evaluating {0} == {1}".format(n1, n2)):
             failed = True
@@ -604,10 +609,11 @@ class TestDecimalNumber():
             failed = True
         if not self.assertTrue(n2 == n2, "Error evaluating {0} == {1}".format(n2, n2)):
             failed = True
-        if not self.assertFalse(n1b == n2, "Error evaluating {0} == {1}".format(n1b, n2)):
-            failed = True
-        if not self.assertFalse(n2 == n1b, "Error evaluating {0} == {1}".format(n1, n1b)):
-            failed = True
+        if sys.implementation.name == "cpython":
+            if not self.assertFalse(n1b == n2, "Error evaluating {0} == {1}".format(n1b, n2)):
+                failed = True
+            if not self.assertFalse(n2 == n1b, "Error evaluating {0} == {1}".format(n1, n1b)):
+                failed = True
 
 
         if not self.assertTrue(n1 != n2, "Error evaluating {0} != {1}".format(n1, n2)):
@@ -618,10 +624,11 @@ class TestDecimalNumber():
             failed = True
         if not self.assertFalse(n2 != n2, "Error evaluating {0} != {1}".format(n2, n2)):
             failed = True
-        if not self.assertTrue(n1b != n2, "Error evaluating {0} != {1}".format(n1b, n2)):
-            failed = True
-        if not self.assertTrue(n2 != n1b, "Error evaluating {0} != {1}".format(n1, n1b)):
-            failed = True
+        if sys.implementation.name == "cpython":
+            if not self.assertTrue(n1b != n2, "Error evaluating {0} != {1}".format(n1b, n2)):
+                failed = True
+            if not self.assertTrue(n2 != n1b, "Error evaluating {0} != {1}".format(n1, n1b)):
+                failed = True
 
         if not self.assertTrue(n1 >= n2, "Error evaluating {0} >= {1}".format(n1, n2)):
             failed = True
@@ -631,19 +638,21 @@ class TestDecimalNumber():
             failed = True
         if not self.assertTrue(n2 >= n2, "Error evaluating {0} >= {1}".format(n2, n2)):
             failed = True
-        if not self.assertTrue(n1b >= n2, "Error evaluating {0} >= {1}".format(n1b, n2)):
-            failed = True
-        if not self.assertFalse(n2 >= n1b, "Error evaluating {0} >= {1}".format(n1, n1b)):
-            failed = True
+        if sys.implementation.name == "cpython":
+            if not self.assertTrue(n1b >= n2, "Error evaluating {0} >= {1}".format(n1b, n2)):
+                failed = True
+            if not self.assertFalse(n2 >= n1b, "Error evaluating {0} >= {1}".format(n1, n1b)):
+                failed = True
 
-        if not self.assertTrue(n1b > n2, "Error evaluating {0} > {1}".format(n1, n2)):
+        if not self.assertTrue(n1 > n2, "Error evaluating {0} > {1}".format(n1, n2)):
             failed = True
-        if not self.assertFalse(n2 > n1b, "Error evaluating {0} > {1}".format(n2, n1)):
+        if not self.assertFalse(n2 > n1, "Error evaluating {0} > {1}".format(n2, n1)):
             failed = True
-        if not self.assertTrue(n1b > n2, "Error evaluating {0} > {1}".format(n1b, n2)):
-            failed = True
-        if not self.assertFalse(n2 > n1b, "Error evaluating {0} > {1}".format(n2, n1b)):
-            failed = True
+        if sys.implementation.name == "cpython":
+            if not self.assertTrue(n1b > n2, "Error evaluating {0} > {1}".format(n1b, n2)):
+                failed = True
+            if not self.assertFalse(n2 > n1b, "Error evaluating {0} > {1}".format(n2, n1b)):
+                failed = True
 
         return failed
 

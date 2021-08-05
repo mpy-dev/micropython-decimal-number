@@ -773,17 +773,11 @@ class DecimalNumber:
         n1, n2 = DecimalNumber._make_integer_comparable(self, other)
         return (n1 < n2)
 
-    def __rlt__(self, other: int) -> bool:  # Less than
-        return self.__lt__(DecimalNumber(other))
-
     def __le__(self, other: "DecimalNumber") -> bool:  # Less than or equal to
         if isinstance(other, int):
             other = DecimalNumber(other)
         n1, n2 = DecimalNumber._make_integer_comparable(self, other)
         return (n1 <= n2)
-
-    def __rle__(self, other: int) -> bool:  # Less than or equal to
-        return self.__le__(DecimalNumber(other))
 
     def __eq__(self, other: "DecimalNumber") -> bool:  # Equal to
         if isinstance(other, int):
@@ -791,17 +785,11 @@ class DecimalNumber:
         n1, n2 = DecimalNumber._make_integer_comparable(self, other)
         return (n1 == n2)
 
-    def __req__(self, other: int) -> bool:  # Equal to
-        return self.__eq__(DecimalNumber(other))
-
     def __ne__(self, other: "DecimalNumber") -> bool:  # Not equal to
         if isinstance(other, int):
             other = DecimalNumber(other)
         n1, n2 = DecimalNumber._make_integer_comparable(self, other)
         return (n1 != n2)
-
-    def __rne__(self, other: int) -> bool:  # Not equal to
-        return self.__ne__(DecimalNumber(other))
 
     def __gt__(self, other: "DecimalNumber") -> bool:  # Greater than
         if isinstance(other, int):
@@ -809,17 +797,11 @@ class DecimalNumber:
         n1, n2 = DecimalNumber._make_integer_comparable(self, other)
         return (n1 > n2)
 
-    def __rgt__(self, other: int) -> bool:  # Greater than
-        return self.__gt__(DecimalNumber(other))
-
     def __ge__(self, other: "DecimalNumber") -> bool:  # Greater than or equal to
         if isinstance(other, int):
             other = DecimalNumber(other)
         n1, n2 = DecimalNumber._make_integer_comparable(self, other)
         return (n1 >= n2)
-
-    def __rge__(self, other: int) -> bool:  # Greater than or equal to
-        return self.__ge__(DecimalNumber(other))
 
     def __str__(self, thousands: bool = False) -> str:
         #   Integer / Decimals: String

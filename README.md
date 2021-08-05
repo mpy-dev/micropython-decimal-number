@@ -526,7 +526,7 @@ This is not exactly part of this module, but someone might find it useful.
 
 **".mpy" files**: a micropython board can run ".py" files directly. It compiles them before executing them, and that takes time. It is a good practice to copy to your micropython board a precompile version, a ".mpy" file.
 
-You can compile the Python file "mpy_decimal.py", that contains all the functionality of **DecimalNumber**, before copy it to your micropython board:
+You can compile the Python file "mpy_decimal.py", that contains all the functionality of **DecimalNumber**, before copying it to your micropython board:
 
 ```shell
 python -m mpy_cross mpy_decimal.py
