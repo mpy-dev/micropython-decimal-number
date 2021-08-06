@@ -993,6 +993,13 @@ class TestDecimalNumber():
                 failed = True
         DecimalNumber.set_scale(current_scale)
 
+        # Check for ln(0)
+        if not self.assertRaises(DecimalNumberExceptionMathDomainError, lambda: DecimalNumber(0).ln()):
+            failed = True
+        # Check for ln() of a negative number
+        if not self.assertRaises(DecimalNumberExceptionMathDomainError, lambda: DecimalNumber(-1).ln()):
+            failed = True
+
         return failed
 
     def test_e(self) -> bool:

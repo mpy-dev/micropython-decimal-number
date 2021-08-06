@@ -7,7 +7,8 @@ if sys.implementation.name == "micropython":    # Just in case...
 
 
 class DecimalNumber:
-    VERSION = "v1.00 - July 2021"
+    """DecimalNumber is a class for decimal floating point arithmetic with arbitrary precision."""
+    VERSION = "v1.0.0 - August 2021"
     DEFAULT_SCALE: int = 16
     DECIMAL_SEP: str = "."
     THOUSANDS_SEP: str = ","
@@ -21,6 +22,13 @@ class DecimalNumber:
     _scale: int = DEFAULT_SCALE
 
     def __init__(self, number=0, decimals: int = 0) -> None:
+        """Initialization of a DecimalNumber.
+        These are this posibilities:
+        1) No parameters => number = 0.         Example: DecimalNumber()
+        2) An integer => number = integer.      Example: DecimalNumber(1)
+        3) Two integers => number and decimals. Example: Decimal(12345, 3) => Number = 12.345
+        4) One string that contains the number. Example: Decimal("12.345") => Number = 12.345
+        """
         if isinstance(number, int):
             self._is_positive: bool = (number >= 0)
             self._number: int = number if number >= 0 else -number
@@ -75,6 +83,10 @@ class DecimalNumber:
 
     @classmethod
     def e(cls) -> "DecimalNumber":
+        """Calculation of e.
+        It uses the Taylor series:
+            e = 1/0! + 1/1! + 1/2! + 1/3! + ... + 1/n!
+        """
         # If it is precalculated
         if DecimalNumber.E_SCALE >= DecimalNumber.get_scale():
             e: DecimalNumber = DecimalNumber(DecimalNumber.E_NUMBER, DecimalNumber.E_SCALE)
@@ -103,7 +115,12 @@ class DecimalNumber:
 
     @classmethod
     def ln2(cls) -> "DecimalNumber":
-        """Calculates ln(2)"""
+        """Calculation of ln(2).
+        ln(2) = -ln(1/2) = -ln(1 - 1/2)
+        It uses the Taylor series:
+            ln(1-x) = -x -x²/2 - x³/3 ...
+            ln(2) = x + x²/2 + x³/3 ... for x = 1/2
+        """
         # If it is precalculated
         if DecimalNumber.LN2_SCALE >= DecimalNumber.get_scale():
             e: DecimalNumber =  DecimalNumber(DecimalNumber.LN2_NUMBER, DecimalNumber.LN2_SCALE)
@@ -111,9 +128,6 @@ class DecimalNumber:
             scale: int = DecimalNumber.get_scale()
             DecimalNumber.set_scale(scale + 4) # extra digits for intermediate steps
 
-            # ln(2) = -ln(1/2) = -ln(1 - 1/2)
-            # ln(1-x) = -x -x²/2 - x³/3 ... --> x = 1/2 is used.
-            # ln(2) = x + x²/2 + x³/3 ... --> x = 1/2 is used.
             i = DecimalNumber(0)    # counter
             half = DecimalNumber(5, 1) # 0.5
             x = DecimalNumber(1)
@@ -134,9 +148,11 @@ class DecimalNumber:
 
     def exp(self, inc_scale: bool = True) -> "DecimalNumber":
         """Calculates exp(n)
-        
-        TODO:   Works for any x, but for speed should have |x| < 1. For an arbitrary number,
-                use exp(x) = exp(x-m*log(2)) * 2^m where m = floor(x/log(2)).
+        Works for any x, but for speed, it should have |x| < 1.
+        For an arbitrary number, to guarantee that |x| < 1, it uses:
+            exp(x) = exp(x - m * log(2)) * 2 ^ m ; where m = floor(x / log(2))
+
+        Scale is increased if 'inc_false' is True.
         """
         scale = DecimalNumber.get_scale()
         # Calculating the necessary extra scale:
@@ -153,12 +169,9 @@ class DecimalNumber:
 
     @staticmethod
     def _exp_lt_1(n: "DecimalNumber", inc_scale: bool = True) -> "DecimalNumber":
-        """Calculates exp(n)
+        """ Auxiliary function to calculates exp(n)
         Expects |n| < 1 to converge rapidly
         """
-        # if inc_scale:
-        #     scale: int = DecimalNumber.get_scale()
-        #     DecimalNumber.set_scale(DecimalNumber.get_scale() + 4) # extra digits for intermediate steps
         if n == 1:
             e = DecimalNumber.e()
         elif n == -1:
@@ -182,12 +195,17 @@ class DecimalNumber:
         #     DecimalNumber.set_scale(scale)
         return +e
 
-    def ln(n: "DecimalNumber") -> "DecimalNumber":
+    def ln(self) -> "DecimalNumber":
         """Calculates ln(n)
-        
-        TODO: Check n for zero or negative values 
-        
+        Newton's method is used to solve: e**a - x = 0 ; a = ln(x)
         """
+        if self == 1:
+            return DecimalNumber(0)
+        if self == 0:
+            raise DecimalNumberExceptionMathDomainError("ln(0) = -Infinite")
+        if self < 0:
+            raise DecimalNumberExceptionMathDomainError("ln(x) exists for x > 0")
+        n = self
         scale: int = DecimalNumber.get_scale()
 
         # Estimate first value
@@ -212,7 +230,9 @@ class DecimalNumber:
         return +y1
 
     def sin(self) -> "DecimalNumber":
-        """Calculates sin(x). x = radians """
+        """Calculates sin(x). x = radians
+        It uses the Taylor series: sin(x) = x - x³/3! + x⁵/5! - x⁷/7! ...
+        """
         x = self.clone()
         scale: int = DecimalNumber.get_scale()
         DecimalNumber.set_scale(scale + 4) # extra digits for intermediate steps
@@ -242,8 +262,6 @@ class DecimalNumber:
         elif quadrant == 4:
             x = 2 * pi - x
 
-        # sin(x) = x - x³/3! + x⁵/5! - x⁷/7! ...
-
         i = DecimalNumber(1)    # counter
         two = DecimalNumber(2)
         n = x.clone()
@@ -268,7 +286,9 @@ class DecimalNumber:
         return +e
 
     def cos(self) -> "DecimalNumber":
-        """Calculates cos(x). x = radians """
+        """Calculates cos(x). x = radians
+        It uses the Taylor series: cos(x) = 1 - x²/2! + x⁴/4! - x⁶/6! ...
+        """
         x = self.clone()
         scale: int = DecimalNumber.get_scale()
         DecimalNumber.set_scale(scale + 4) # extra digits for intermediate steps
@@ -296,8 +316,6 @@ class DecimalNumber:
             x = x - pi
         elif quadrant == 4:
             x = 2 * pi - x
-
-        # cos(x) = 1 - x²/2! + x⁴/4! - x⁶/6! ...
 
         i = DecimalNumber(1)    # counter
         two = DecimalNumber(2)
@@ -357,12 +375,12 @@ class DecimalNumber:
                 return +t
 
     def asin(self) -> "DecimalNumber":
-        """Calculates asin(n)
-
-        TODO:   if |n| between 0 and 0.707: arcsin(x) using series
-                if |n| between 0.707 and 1: arcsin(x) = pi/2 - arcsin( sqrt(1 - x²) )
-                This guarantees arcsin(x) using series with x <= 0.707 ; (sqrt(1/2)).
-                The series for arcsin(x) converges very slowly for |x| near 1.
+        """Calculates asin(x)
+        It uses the Taylor series: arcsin(x) = x + 3x³/6 + 15x⁵/336 + ...
+        It converges very slowly for |x| near 1. To avoid values near 1:
+        If |n| between 0 and 0.707: arcsin(x) is calculated using the series.
+        if |n| between 0.707 and 1: arcsin(x) is calculated as pi/2 - arcsin( sqrt(1 - x²) )
+        This guarantees arcsin(x) using series with x <= 0.707 ; (sqrt(1/2)).
         """
         if self >= -1 and self <= 1:
             if self == -1:
@@ -412,14 +430,13 @@ class DecimalNumber:
             raise DecimalNumberExceptionMathDomainError("asin(x) admits -1 <= x <= 1 only")
 
     def acos(self) -> "DecimalNumber":
-        """Calculates acos(n)
+        """Calculates acos(x)
+        It uses the equivalence: acos(x) = π/2 - asin(x)
         """
-
         if self >= -1 and self <= 1:
             scale: int = DecimalNumber.get_scale()
             DecimalNumber.set_scale(DecimalNumber.get_scale() + 4) # extra digits for intermediate steps
 
-            # acos(n) = pi/2 - asin(x)
             a = (DecimalNumber.pi() / 2) - self.asin()
 
             DecimalNumber.set_scale(scale)
@@ -428,7 +445,7 @@ class DecimalNumber:
             raise DecimalNumberExceptionMathDomainError("acos(x) admits -1 <= x <= 1 only")
 
     def atan(self) -> "DecimalNumber":
-        """Calculates atan(n)
+        """Calculates atan(x)
         It uses: atan(x) = asin( x / sqrt(1 + x²) )
         """
         scale: int = DecimalNumber.get_scale()
@@ -443,6 +460,7 @@ class DecimalNumber:
 
     @staticmethod
     def version() -> str:
+        """Returns a string with the version of DecimalNumber"""
         return DecimalNumber.VERSION
 
     @staticmethod
