@@ -465,6 +465,10 @@ class DecimalNumber:
 
     @staticmethod
     def set_scale(num_digits: int) -> None:
+        """Sets the scale.
+        Scale is a class value, the maximum number of decimals that a DecimalNumber can have.
+        The default value is 16. The maximum value is only limited by the available
+        memory and computer power."""
         if num_digits >= 0:
             DecimalNumber._scale = num_digits
         else:
@@ -473,14 +477,25 @@ class DecimalNumber:
 
     @staticmethod
     def get_scale() -> int:
+        """Gets the current scale value."""
         return DecimalNumber._scale
 
     @staticmethod
-    def _parse_number(number: str) -> Tuple[bool, int, int]:  # True: correct
-        # Note: this is faster than regular expressions
-        #   and, also, this regular expression generates and
-        #   exception when the string "number" is long.
-        # Regular expression:   ^\-?[0-9]+\.?[0-9]*
+    def _parse_number(number: str) -> Tuple[bool, int, int]:
+        """This is a static and auxiliary method to parse a string containing
+        a number. If the string is parsed as a number, it returns three values:
+            True --> string correctly parsed as number.
+            Integer containing all the digits of the number.
+            Integer representing the number of decimals.
+        For example: "-12345.678" will be parsed and the values returned will be:
+            (True, -12345678, 3)
+        If the parsing fails, it returns (Falsem 0, 0).
+        Note: this is faster than using a regular expression. Also, when using
+        the regular expression "^\-?[0-9]+\.?[0-9]*" and exception was raised when
+        using micropython when the string "number" was long.
+        """
+          # True: correct
+        # Note: 
         step: int = 1   # 1: '-', 2: [0-9], 3: '.', 4: [0-9]
         position: int = 0
         integer_number: int = 0
@@ -527,6 +542,7 @@ class DecimalNumber:
 
     @staticmethod
     def _from_string(number: str) -> "DecimalNumber":
+        """static and auxiliary method to create a DecimalNumber from a string."""
         correct, integer_number, num_decimals = DecimalNumber._parse_number(
             number)
         if not correct:
@@ -538,7 +554,12 @@ class DecimalNumber:
 
     @staticmethod
     def _make_integer_comparable(n1: "DecimalNumber", n2: "DecimalNumber") -> Tuple[int]:
-            # Makes the integers comparable by taking into account the decimals
+        """Static and auxiliary method to creates two integers from two DecimalNumber,
+        without decimals, that can be compared (or sum) by taking into account their decimals.
+        Examples:
+            n1: 12345.678, n2: 5.4321098  --> i1: 123456780000, i2: 54321098
+            n1: 345.1, n2: 7.65: --> i1: 34510, i2: 765
+        """
         max_decimals: int = max(n1._num_decimals, n2._num_decimals)
         n1_number: int = n1._number
         if not n1._is_positive:
