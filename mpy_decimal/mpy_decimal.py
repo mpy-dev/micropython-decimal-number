@@ -8,7 +8,8 @@ if sys.implementation.name == "micropython":    # Just in case...
 
 class DecimalNumber:
     """DecimalNumber is a class for decimal floating point arithmetic with arbitrary precision."""
-    VERSION = "v1.0.0 - August 2021"
+    VERSION = (1, 0, 0)
+    VERSION_NAME = "v1.0.0 - August 2021"
     DEFAULT_SCALE: int = 16
     DECIMAL_SEP: str = "."
     THOUSANDS_SEP: str = ","
@@ -460,8 +461,13 @@ class DecimalNumber:
 
     @staticmethod
     def version() -> str:
-        """Returns a string with the version of DecimalNumber"""
+        """Returns a tuple (MINOR, MINOR, PATCH) with the version of DecimalNumber"""
         return DecimalNumber.VERSION
+
+    @staticmethod
+    def version_name() -> str:
+        """Returns a string with the version of DecimalNumber"""
+        return DecimalNumber.VERSION_NAME
 
     @staticmethod
     def set_scale(num_digits: int) -> None:
@@ -575,6 +581,10 @@ class DecimalNumber:
 
     @staticmethod
     def _isqrt(n: int) -> int:
+        """Static and auxiliary method to calculate the square root
+        of an integer.
+        It uses Newton's method with integer division.
+        """
         if n < 0:
             return 0
         # Calculates initial value
@@ -591,6 +601,7 @@ class DecimalNumber:
         return x2
 
     def clone(self) -> "DecimalNumber":
+        """Returns a new DecimalNumber as a clone of self."""
         n = DecimalNumber()
         n._number = self._number
         n._num_decimals = self._num_decimals
@@ -598,11 +609,16 @@ class DecimalNumber:
         return n
 
     def copy_from(self, other: "DecimalNumber") -> None:
+        """It copies on self other DecimalNumber."""
         self._number = other._number
         self._num_decimals = other._num_decimals
         self._is_positive = other._is_positive
 
     def square_root(self) -> "DecimalNumber":
+        """Calculates the square root of a DecimalNumber.
+        It converts the DecimalNumber to an integer (without decimals), calculates
+        its square root using _isqrt() and then it sets the decimals.
+        """
         n = DecimalNumber()
         if not self._is_positive:
             raise DecimalNumberExceptionMathDomainError(
@@ -619,11 +635,16 @@ class DecimalNumber:
         n._number = num_integer
         n._num_decimals = (
             (self._num_decimals + additional_decimals) // 2) + DecimalNumber.get_scale()
-        #print(num_integer, n._num_decimals, n)
         n._reduce_to_scale()
         return n
 
     def __add__(self, other: "DecimalNumber") -> "DecimalNumber":
+        """Adds two DecimalNumber.
+        Returns (self + other)
+        """
+        if isinstance(other, int):
+            other = DecimalNumber(other)
+
         #   123 + 456       : 123
         #                   : 456
         #                   : 579
@@ -639,23 +660,16 @@ class DecimalNumber:
         #   0.0123 + 0.56   :   0   123
         #                   :   0    56 --> Apply 4 decimals to 56 --> 5600
         #                   :   0  5723 --> 123 + 5600
-        if isinstance(other, int):
-            other = DecimalNumber(other)
 
         max_decimals: int = max(self._num_decimals, other._num_decimals)
 
         a_factor: int = 10 ** self._num_decimals
         b_factor: int = 10 ** other._num_decimals
 
-        #print(self, other)
-        #print(a_factor, b_factor)
-
         a_integer: int = self._number // a_factor
         a_decimals: int = self._number % a_factor
         b_integer: int = other._number // b_factor
         b_decimals: int = other._number % b_factor
-
-        #print(a_integer, a_decimals, b_integer, b_decimals)
 
         if self._num_decimals < max_decimals:
             a_decimals *= (10 ** (max_decimals - self._num_decimals))
@@ -663,19 +677,15 @@ class DecimalNumber:
         if other._num_decimals < max_decimals:
             b_decimals *= (10 ** (max_decimals - other._num_decimals))
 
-        #print(a_integer, a_decimals, b_integer, b_decimals)
-
         c_factor: int = max(a_factor, b_factor)
         a_all: int = a_integer * c_factor + a_decimals
         b_all: int = b_integer * c_factor + b_decimals
 
-        c_all: int = (a_all if self._is_positive else -a_all) + \
-            (b_all if other._is_positive else -b_all)
+        c_all: int = (a_all if self._is_positive else -a_all) + (b_all if other._is_positive else -b_all)
         c_is_positive: bool = (c_all > 0)
         if c_all < 0:
             c_all = -c_all
 
-        #print(a_all, b_all, c_all)
         new_number = DecimalNumber(c_all, max_decimals)
         new_number._is_positive = c_is_positive
 
@@ -684,6 +694,9 @@ class DecimalNumber:
         return new_number
 
     def __iadd__(self, other: "DecimalNumber") -> "DecimalNumber":
+        """Adds a DecimalNumber to itself.
+        Returns (self += other)
+        """
         n = self.__add__(other)
         self._number = n._number
         self._num_decimals = n._num_decimals
@@ -691,6 +704,10 @@ class DecimalNumber:
         return self
 
     def __radd__(self, other: int) -> "DecimalNumber":
+        """Reverse add.
+        It is called for (integer + DecimalNumber).
+        At this moment, micropython does not support it.
+        """
         return self.__add__(DecimalNumber(other))
 
     def __sub__(self, other: "DecimalNumber") -> "DecimalNumber":
