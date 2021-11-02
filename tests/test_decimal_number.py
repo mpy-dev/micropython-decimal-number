@@ -1361,8 +1361,7 @@ if __name__ == "__main__":
     for k, v in TestDecimalNumber.__dict__.items():
         if k.startswith("test_") and callable(v):
             print("Testing: ", k)
-            failed: bool = TestDecimalNumber.__dict__[
-                k](test)  # Executes the test
+            failed: bool = TestDecimalNumber.__dict__[k](test)  # Executes the test
             if failed:
                 failed_counter += 1
 

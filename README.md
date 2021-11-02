@@ -12,7 +12,7 @@ The module **mpy_decimal** defines the class **DecimalNumber** that contains all
         decimals = 8
         positive = False
 
-The precision of **DecimalNumber** is mainly limited by available memory and procesing power. **DecimalNumber** uses the concept **scale**, which is the number of decimal places that the class uses for its numbers and operations. The concept is similar to the use of 'scale' in the calculator an language [*bc*](https://www.gnu.org/software/bc/manual/html_mono/bc.html).  The default value for **scale** is 16. It is a global value of the class that can be changed at any time. For rounding, **DecimalNumber** uses [*round half to even*](https://en.wikipedia.org/wiki/Rounding#Round_half_to_even).
+The precision of **DecimalNumber** is mainly limited by available memory and procesing power. **DecimalNumber** uses the concept **scale**, which is the number of decimal places that the class uses for its numbers and operations. The concept is similar to the use of 'scale' in the calculator and language [*bc*](https://www.gnu.org/software/bc/manual/html_mono/bc.html).  The default value for **scale** is 16. It is a global value of the class that can be changed at any time. For rounding, **DecimalNumber** uses [*round half to even*](https://en.wikipedia.org/wiki/Rounding#Round_half_to_even).
 
 ## Performance ##
 
@@ -22,7 +22,7 @@ All the internal operations of **DecimalNumber** are done with integers (*int* b
     |  SYSTEM INFORMATION                                           |
     +---------------------------------------------------------------+
     Implementation name:           micropython
-    Implementation version:        1.16.0
+    Implementation version:        1.17.0
     Implementation platform:       rp2
     CPU frequency:                 125 Mhz
 
@@ -31,55 +31,55 @@ All the internal operations of **DecimalNumber** are done with integers (*int* b
     +---------------------------------------------------------------+
     Scale (max. decimals):         16
     Iterations per test:           1000
-    Number 1:                      6168282555547.2665356180611533
-    Number 2:                      -6262250050511.8063054365344738
-    Addition (n1 + n2):            1.596 ms
-    Subtraction (n1 - n2):         1.636 ms
-    Multiplication (n1 * n2):      1.044 ms
-    Division (n1 / n2):            1.134 ms
-    Square root abs(n1):           3.833 ms
-    Power: (pi/2) ** 15            10.067 ms
-    DecimalNumber from int:        0.359 ms
-    DecimalNumber from string:     3.669 ms
+    Number 1:                      676800226403580.0763143540562581
+    Number 2:                      -588054433.4243183156555517
+    Addition (n1 + n2):            1.566 ms
+    Subtraction (n1 - n2):         1.658 ms
+    Multiplication (n1 * n2):      1.008 ms
+    Division (n1 / n2):            1.165 ms
+    Square root abs(n1):           3.894 ms
+    Power: (pi/2) ** 15            9.742 ms
+    DecimalNumber from int:        0.373 ms
+    DecimalNumber from string:     3.771 ms
     Iterations per test:           10
-    Sine: sin(0.54321)             83.6 ms
-    Cosine: cos(0.54321)           82.5 ms
-    Tangent: tan(0.54321)          172.7 ms
-    Arcsine: asin(0.54321)         258.7 ms
-    Arccosine: acos(0.54321)       321.4 ms
-    Arctangent: atan(0.54321)      286.8 ms
-    Exponential: exp(12.345)       153.6 ms
-    Natural logarithm: ln(12.345)  153.6 ms
+    Sine: sin(0.54321)             86.1 ms
+    Cosine: cos(0.54321)           85.4 ms
+    Tangent: tan(0.54321)          206.2 ms
+    Arcsine: asin(0.54321)         267.6 ms
+    Arccosine: acos(0.65432)       466.6 ms
+    Arctangent: atan(1.2345)       482.9 ms
+    Exponential: exp(12.345)       150.3 ms
+    Natural logarithm: ln(12.345)  150.3 ms
 
     +---------------------------------------------------------------+
     |  PERFORMANCE WITH SCALE = 50                                  |
     +---------------------------------------------------------------+
     Scale (max. decimals):         50
     Iterations per test:           400
-    Number 1:                      4102630150514078885171172412160012615517864.15061603038548458121763350374462467054537604684286
-    Number 2:                      -41481204122815468001552146755804481536.11455213043615726131720441506304341181137611244001
-    Addition (n1 + n2):            2.1325 ms
-    Subtraction (n1 - n2):         2.135 ms
-    Multiplication (n1 * n2):      1.5775 ms
-    Division (n1 / n2):            1.4425 ms
-    Square root abs(n1):           12.58 ms
-    Power: (pi/2) ** 15            12.11 ms
-    DecimalNumber from int:        0.37 ms
-    DecimalNumber from string:     11.2 ms
+    Number 1:                      -52120532222624450128770268842457267852564.2827656475718343863261636466317618740063535442755
+    Number 2:                      45521155711104405467504347326435032.84784860134353338157872524608016421466524813041101
+    Addition (n1 + n2):            2.065 ms
+    Subtraction (n1 - n2):         2.1925 ms
+    Multiplication (n1 * n2):      1.55 ms
+    Division (n1 / n2):            1.45 ms
+    Square root abs(n1):           11.87 ms
+    Power: (pi/2) ** 15            11.69 ms
+    DecimalNumber from int:        0.3825 ms
+    DecimalNumber from string:     10.64 ms
     Iterations per test:           4
-    Sine: sin(0.54321)             181.5 ms
-    Cosine: cos(0.54321)           178.0 ms
-    Tangent: tan(0.54321)          363.5 ms
-    Arcsine: asin(0.54321)         812.2499 ms
-    Arccosine: acos(0.54321)       885.25 ms
-    Arctangent: atan(0.54321)      820.2499 ms
-    Exponential: exp(12.345)       287.75 ms
-    Natural logarithm: ln(12.345)  287.5 ms
+    Sine: sin(0.54321)             183.25 ms
+    Cosine: cos(0.54321)           185.5 ms
+    Tangent: tan(0.54321)          397.25 ms
+    Arcsine: asin(0.54321)         826.4999 ms
+    Arccosine: acos(0.65432)       1314.5 ms
+    Arctangent: atan(1.2345)       1368.75 ms
+    Exponential: exp(12.345)       280.25 ms
+    Natural logarithm: ln(12.345)  280.0 ms
 
     +---------------------------------------------------------------+
     |  CALCULATING PI                                               |
     +---------------------------------------------------------------+
-    Pi with 300 decimals:          5.774 s
+    Pi with 300 decimals:          5.838 s
     3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141274
 
 ## How to use
@@ -90,7 +90,7 @@ To test this module on a PC, you can start by importing the module:
 from mpy_decimal.mpy_decimal import *
 ```
 
-For testing on a Micropython board, you have probably copied the file 'mpy_decimal.py' to the board or a compiled version of it: 'mpy_decimal.mpy'. There is a guide about this at the end of this document. You can import the module with:
+For testing on a Micropython board, you have probably copied the file 'mpy_decimal.py' to the board or a compiled version of it: 'mpy_decimal.mpy'. There is a guide that explains how to compile this module and how to copy it to a device at the end of this document. You can import the module with:
 
 ```python
 from mpy_decimal import *
@@ -153,7 +153,7 @@ str(n)
 ```
 
 
-The method **to_string_thousands()** of **DecimalNumber** returns a string with the number formatted with ',' as thousands separator. Decimals are presented normally:
+The method **to_string_thousands()** of **DecimalNumber** returns a string with the number formatted with ',' as thousands separator. Decimals figures are not modified:
 
 ```python
 print(n.to_string_thousands())
@@ -310,7 +310,7 @@ print(1 > b)    # False
 
 ### Other mathematical functions ###
 
-**exp()**: exponetial function e<sup>x</sup>.
+**exp()**: exponential function e<sup>x</sup>.
 
 **ln()**: natural logarithm (base e).
 
