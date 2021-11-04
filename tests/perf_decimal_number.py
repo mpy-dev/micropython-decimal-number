@@ -187,6 +187,15 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     t = get_time_ms() - t
     print("{:<30}".format("Arctangent: atan(" + str(n) + ")"), t / limit2, "ms")
 
+    # 2-argument arctangent
+    n = DecimalNumber("1.23")
+    n2 = DecimalNumber("2.34")
+    t = get_time_ms()
+    for _ in range(0, limit2):
+        n3 = DecimalNumber.atan2(n, n2)
+    t = get_time_ms() - t
+    print("{:<30}".format("Arctangent2: atan2(" + str(n) + ", " + str(n2) + ")"), t / limit2, "ms")
+
     # Exponential
     n = DecimalNumber("12.345")
     t = get_time_ms()

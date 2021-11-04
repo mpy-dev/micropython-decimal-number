@@ -1301,7 +1301,7 @@ class TestDecimalNumber():
 
     def test_atan(self) -> bool:
         """Tests atan()
-        It tests a list of numbers calculating acos(number)
+        It tests a list of numbers calculating atan(number)
         and checking the expected result.
         """
         self.test_counter += 1
@@ -1335,12 +1335,47 @@ class TestDecimalNumber():
         DecimalNumber.set_scale(50)
         for n in list_numbers:
             a = str(DecimalNumber(n[0]).atan())
-            if not self.assertEqual(a, n[1], "Error calculating acos({0})".format(n[0])):
+            if not self.assertEqual(a, n[1], "Error calculating atan({0})".format(n[0])):
                 failed = True
         DecimalNumber.set_scale(current_scale)
 
         return failed
 
+    def test_atan2(self) -> bool:
+        """Tests atan2()
+        It tests a list of numbers calculating atan(number)
+        and checking the expected result.
+        """
+        self.test_counter += 1
+        failed: bool = False
+
+        list_numbers = [
+            ('0', '1', '0'),
+            ('1', '1', '0.785398163397448309615660845819875721049292349843776455243736148076954101571552249657008706335529267'),
+            ('1', '0', '1.570796326794896619231321691639751442098584699687552910487472296153908203143104499314017412671058534'),
+            ('1', '-1', '2.356194490192344928846982537459627163147877049531329365731208444230862304714656748971026119006587801'),
+            ('0', '-1', '3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117068'),
+            ('-1', '-1', '-2.356194490192344928846982537459627163147877049531329365731208444230862304714656748971026119006587801'),
+            ('-1', '0', '-1.570796326794896619231321691639751442098584699687552910487472296153908203143104499314017412671058534'),
+            ('-1', '1', '-0.785398163397448309615660845819875721049292349843776455243736148076954101571552249657008706335529267'),
+            ('12345678.90123456789', '23456789.0123456789', '0.4844779448504728440723160650537673828414181888506758249301810902601712799253653679799329328565153514')
+        ]
+
+        current_scale: int = DecimalNumber.get_scale()
+        DecimalNumber.set_scale(100)
+        for n in list_numbers:
+            y = DecimalNumber(n[0])
+            x = DecimalNumber(n[1])
+            a = str(DecimalNumber.atan2(y, x))
+            if not self.assertEqual(a, n[2], "Error calculating atan2({0}, {1})".format(n[0], n[1])):
+                failed = True
+
+        if not self.assertRaises(DecimalNumberExceptionMathDomainError, lambda: DecimalNumber.atan2(0, 0)):
+            failed = True
+
+        DecimalNumber.set_scale(current_scale)
+
+        return failed
 
 
 # def print_exception(exc: Exception) -> None:

@@ -458,6 +458,45 @@ class DecimalNumber:
         DecimalNumber.set_scale(scale)
         return +a
 
+    @staticmethod
+    def atan2(y: "DecimalNumber", x: "DecimalNumber") -> "DecimalNumber":
+        """Calculates atan2(y, x), 2-argument arctangent
+        It uses:
+            if x > 0:   atan(y/x)
+            if x < 0:
+                        if y >= 0:  atan(y/x) + pi
+                        if y < 0:   atan(y/x) - pi
+            if x = 0:
+                        if y > 0:   +pi/2
+                        if y < 0:   -pi/2
+                        if y = 0:   undefined
+        """
+        if isinstance(y, int):
+            y = DecimalNumber(y)
+        if isinstance(x, int):
+            x = DecimalNumber(x)
+
+        scale: int = DecimalNumber.get_scale()
+        DecimalNumber.set_scale(DecimalNumber.get_scale() + 4) # extra digits for intermediate steps
+        r = DecimalNumber()
+        if x == 0:
+            if y == 0:
+                raise DecimalNumberExceptionMathDomainError(
+                    "Undefined value for atan2(0, 0)")
+            elif y > 0:
+                r = (DecimalNumber.pi() / 2)
+            else:
+                r = (-DecimalNumber.pi() / 2)
+        else:
+            r = (y / x).atan()
+            if x < 0:
+                if y >= 0:
+                    r += DecimalNumber.pi()
+                else:
+                    r -= DecimalNumber.pi()
+        
+        DecimalNumber.set_scale(scale)
+        return +r
 
     @staticmethod
     def version() -> str:
@@ -619,11 +658,11 @@ class DecimalNumber:
         It converts the DecimalNumber to an integer (without decimals), calculates
         its square root using _isqrt() and then it sets the decimals.
         """
-        n = DecimalNumber()
         if not self._is_positive:
             raise DecimalNumberExceptionMathDomainError(
                 "No square root for negative numbers")
 
+        n = DecimalNumber()
         num_integer: int = self._number
         num_integer *= (10 ** (DecimalNumber.get_scale() * 2))
         additional_decimals: int = 0

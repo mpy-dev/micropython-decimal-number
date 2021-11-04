@@ -31,55 +31,57 @@ All the internal operations of **DecimalNumber** are done with integers (*int* b
     +---------------------------------------------------------------+
     Scale (max. decimals):         16
     Iterations per test:           1000
-    Number 1:                      676800226403580.0763143540562581
-    Number 2:                      -588054433.4243183156555517
-    Addition (n1 + n2):            1.566 ms
-    Subtraction (n1 - n2):         1.658 ms
-    Multiplication (n1 * n2):      1.008 ms
-    Division (n1 / n2):            1.165 ms
-    Square root abs(n1):           3.894 ms
-    Power: (pi/2) ** 15            9.742 ms
-    DecimalNumber from int:        0.373 ms
-    DecimalNumber from string:     3.771 ms
+    Number 1:                      63107666423864.1503618336011148
+    Number 2:                      21513455188640.8462728528253754
+    Addition (n1 + n2):            1.564 ms
+    Subtraction (n1 - n2):         1.695 ms
+    Multiplication (n1 * n2):      0.988 ms
+    Division (n1 / n2):            1.184 ms
+    Square root abs(n1):           3.984 ms
+    Power: (pi/2) ** 15            9.799 ms
+    DecimalNumber from int:        0.378 ms
+    DecimalNumber from string:     3.685 ms
     Iterations per test:           10
-    Sine: sin(0.54321)             86.1 ms
-    Cosine: cos(0.54321)           85.4 ms
-    Tangent: tan(0.54321)          206.2 ms
-    Arcsine: asin(0.54321)         267.6 ms
-    Arccosine: acos(0.65432)       466.6 ms
-    Arctangent: atan(1.2345)       482.9 ms
-    Exponential: exp(12.345)       150.3 ms
-    Natural logarithm: ln(12.345)  150.3 ms
+    Sine: sin(0.54321)             85.80001 ms
+    Cosine: cos(0.54321)           86.7 ms
+    Tangent: tan(0.54321)          206.7 ms
+    Arcsine: asin(0.54321)         270.2 ms
+    Arccosine: acos(0.65432)       468.8 ms
+    Arctangent: atan(1.2345)       485.5 ms
+    Arctangent2: atan2(1.23, 2.34) 349.2 ms
+    Exponential: exp(12.345)       151.0 ms
+    Natural logarithm: ln(12.345)  152.0 ms
 
     +---------------------------------------------------------------+
     |  PERFORMANCE WITH SCALE = 50                                  |
     +---------------------------------------------------------------+
     Scale (max. decimals):         50
     Iterations per test:           400
-    Number 1:                      -52120532222624450128770268842457267852564.2827656475718343863261636466317618740063535442755
-    Number 2:                      45521155711104405467504347326435032.84784860134353338157872524608016421466524813041101
-    Addition (n1 + n2):            2.065 ms
-    Subtraction (n1 - n2):         2.1925 ms
-    Multiplication (n1 * n2):      1.55 ms
-    Division (n1 / n2):            1.45 ms
-    Square root abs(n1):           11.87 ms
-    Power: (pi/2) ** 15            11.69 ms
-    DecimalNumber from int:        0.3825 ms
-    DecimalNumber from string:     10.64 ms
+    Number 1:                      1008440840554324243744283306032711702.13787157234850455642441824006520576852374144010113
+    Number 2:                      -603053031456028063831871487068.81514266625502376325215658564112814751837118860547
+    Addition (n1 + n2):            1.9575 ms
+    Subtraction (n1 - n2):         2.25 ms
+    Multiplication (n1 * n2):      1.4625 ms
+    Division (n1 / n2):            1.52 ms
+    Square root abs(n1):           12.455 ms
+    Power: (pi/2) ** 15            11.7425 ms
+    DecimalNumber from int:        0.385 ms
+    DecimalNumber from string:     10.055 ms
     Iterations per test:           4
-    Sine: sin(0.54321)             183.25 ms
-    Cosine: cos(0.54321)           185.5 ms
-    Tangent: tan(0.54321)          397.25 ms
-    Arcsine: asin(0.54321)         826.4999 ms
-    Arccosine: acos(0.65432)       1314.5 ms
-    Arctangent: atan(1.2345)       1368.75 ms
-    Exponential: exp(12.345)       280.25 ms
-    Natural logarithm: ln(12.345)  280.0 ms
+    Sine: sin(0.54321)             186.25 ms
+    Cosine: cos(0.54321)           184.5 ms
+    Tangent: tan(0.54321)          398.75 ms
+    Arcsine: asin(0.54321)         831.25 ms
+    Arccosine: acos(0.65432)       1322.25 ms
+    Arctangent: atan(1.2345)       1377.75 ms
+    Arctangent2: atan2(1.23, 2.34) 893.4999 ms
+    Exponential: exp(12.345)       281.75 ms
+    Natural logarithm: ln(12.345)  281.75 ms
 
     +---------------------------------------------------------------+
     |  CALCULATING PI                                               |
     +---------------------------------------------------------------+
-    Pi with 300 decimals:          5.838 s
+    Pi with 300 decimals:          5.862 s
     3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582231725359408128481117450284102701938521105559644622948954930381964428810975665933446128475648233786783165271201909145648566923460348610454326648213393607260249141274
 
 ## How to use
@@ -330,7 +332,9 @@ The argument of trigonometric functions sin(), cos() and tan() is an angle expre
 
 **atan()**: arctangent.
 
-The functions asin(), acos() and atan() return an angle in radians.
+**atan2()**: 2-argument arctangent.
+
+The functions asin(), acos(), atan() and atan2() return an angle in radians.
 
 Example:
 
@@ -344,6 +348,8 @@ n.tan()     # 0.8985257469396026
 n.asin()    # 0.821252884452186
 n.acos()    # 0.7495434423427106
 n.atan()    # 0.6318812315412357
+n2 = DecimalNumber("1.732")
+DecimalNumber.atan(n, n2)   # 0.3998638956924461
 ```
 
 ### Other methods ###
@@ -437,7 +443,7 @@ This module defines four exceptions:
 
 * **DecimalNumberExceptionBadInit**: this exception is raised when a negative number of decimals is provided when initializing a **DecimalNumber**.
 
-* **DecimalNumberExceptionMathDomainError**: this exception occurs when trying to calculate the square root of a negative number.
+* **DecimalNumberExceptionMathDomainError**: this exception occurs when trying to calculate the square root of a negative number or atan2(0, 0).
 
 * **DecimalNumberExceptionDivisionByZeroError**: this is the division by zero exception.
 
