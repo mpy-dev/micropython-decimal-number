@@ -16,22 +16,21 @@ if sys.implementation.name == "micropython":
     iteration_limit2: int = 400
     pi_decimals: int = 300
 
-line: str = '+' + ('-' * 63) + '+'
-
+format_str: str = "{:<36}"
 
 def system_machine_info() -> None:
     """It prints system information."""
-    print("{:<30}".format("Implementation name:"), sys.implementation.name)
-    print("{:<30}".format("Implementation version:"),
+    print(format_str.format("Implementation name:"), sys.implementation.name)
+    print(format_str.format("Implementation version:"),
           "{0}.{1}.{2}".format(
         sys.implementation.version[0],
         sys.implementation.version[1],
         sys.implementation.version[2]
     )
     )
-    print("{:<30}".format("Implementation platform:"), sys.platform)
+    print(format_str.format("Implementation platform:"), sys.platform)
     if sys.implementation.name == "micropython":
-        print("{:<30}".format("CPU frequency:"),
+        print(format_str.format("CPU frequency:"),
               machine.freq() // 1000000, "Mhz")
 
 def get_time_ms() -> int:
@@ -61,44 +60,44 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     global iteration_limit
 
     """Performance calculations of DecimalNumber class"""
-    print("{:<30}".format("Scale (max. decimals):"), DecimalNumber.get_scale())
-    print("{:<30}".format("Iterations per test:"), limit1)
+    print(format_str.format("Scale (max. decimals):"), DecimalNumber.get_scale())
+    print(format_str.format("Iterations per test:"), limit1)
 
     n1 = gen_random_number()
     zero: bool = True
     while zero:
         n2 = gen_random_number()
         zero = (n2 == DecimalNumber(0))
-    print("{:<30}".format("Number 1:"), n1)
-    print("{:<30}".format("Number 2:"), n2)
+    print(format_str.format("Number 1:"), n1)
+    print(format_str.format("Number 2:"), n2)
 
     # Addition
     t = get_time_ms()
     for _ in range(0, limit1):
         n3 = n1 + n2
     t = get_time_ms() - t
-    print("{:<30}".format("Addition (n1 + n2):"), t / limit1, "ms")
+    print(format_str.format("Addition (n1 + n2):"), t / limit1, "ms")
 
     # Subtraction
     t = get_time_ms()
     for _ in range(0, limit1):
         n3 = n1 - n2
     t = get_time_ms() - t
-    print("{:<30}".format("Subtraction (n1 - n2):"), t / limit1, "ms")
+    print(format_str.format("Subtraction (n1 - n2):"), t / limit1, "ms")
 
     # Multiplication
     t = get_time_ms()
     for _ in range(0, limit1):
         n3 = n1 * n2
     t = get_time_ms() - t
-    print("{:<30}".format("Multiplication (n1 * n2):"), t / limit1, "ms")
+    print(format_str.format("Multiplication (n1 * n2):"), t / limit1, "ms")
 
     # Division
     t = get_time_ms()
     for _ in range(0, limit1):
         n3 = n1 / n2
     t = get_time_ms() - t
-    print("{:<30}".format("Division (n1 / n2):"), t / limit1, "ms")
+    print(format_str.format("Division (n1 / n2):"), t / limit1, "ms")
 
     # Square root
     n = abs(n1)
@@ -106,7 +105,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit1):
         n3 = n.square_root()
     t = get_time_ms() - t
-    print("{:<30}".format("Square root abs(n1):"), t / limit1, "ms")
+    print(format_str.format("Square root abs(n1):"), t / limit1, "ms")
 
     # Power
     n = DecimalNumber.pi() / 2
@@ -115,7 +114,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit1):
         n3 = n ** e
     t = get_time_ms() - t
-    print("{:<30}".format("Power: (pi/2) ** 15"), t / limit1, "ms")
+    print(format_str.format("Power: (pi/2) ** 15"), t / limit1, "ms")
 
     # Creation from integer
     n = n1._number
@@ -124,7 +123,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit1):
         n3 = DecimalNumber(n, d)
     t = get_time_ms() - t
-    print("{:<30}".format("DecimalNumber from int:"), t / limit1, "ms")
+    print(format_str.format("DecimalNumber from int:"), t / limit1, "ms")
 
     # Creation from string
     n = str(n1)
@@ -132,11 +131,11 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit1):
         n3 = DecimalNumber(n)
     t = get_time_ms() - t
-    print("{:<30}".format("DecimalNumber from string:"), t / limit1, "ms")
+    print(format_str.format("DecimalNumber from string:"), t / limit1, "ms")
 
 
     # From this point, the iterations are reduced
-    print("{:<30}".format("Iterations per test:"), limit2)
+    print(format_str.format("Iterations per test:"), limit2)
 
     # Sine
     n = DecimalNumber("0.54321")
@@ -144,7 +143,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit2):
         n3 = n.sin()
     t = get_time_ms() - t
-    print("{:<30}".format("Sine: sin(" + str(n) + ")"), t / limit2, "ms")
+    print(format_str.format("Sine: sin(" + str(n) + ")"), t / limit2, "ms")
 
     # Cosine
     n = DecimalNumber("0.54321")
@@ -152,7 +151,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit2):
         n3 = n.sin()
     t = get_time_ms() - t
-    print("{:<30}".format("Cosine: cos(" + str(n) + ")"), t / limit2, "ms")
+    print(format_str.format("Cosine: cos(" + str(n) + ")"), t / limit2, "ms")
 
     # Tangent
     n = DecimalNumber("0.54321")
@@ -160,7 +159,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit2):
         n3 = n.tan()
     t = get_time_ms() - t
-    print("{:<30}".format("Tangent: tan(" + str(n) + ")"), t / limit2, "ms")
+    print(format_str.format("Tangent: tan(" + str(n) + ")"), t / limit2, "ms")
 
 
     # Arcsine
@@ -169,7 +168,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit2):
         n3 = n.asin()
     t = get_time_ms() - t
-    print("{:<30}".format("Arcsine: asin(" + str(n) + ")"), t / limit2, "ms")
+    print(format_str.format("Arcsine: asin(" + str(n) + ")"), t / limit2, "ms")
 
     # Arccosine
     n = DecimalNumber("0.65432")
@@ -177,7 +176,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit2):
         n3 = n.acos()
     t = get_time_ms() - t
-    print("{:<30}".format("Arccosine: acos(" + str(n) + ")"), t / limit2, "ms")
+    print(format_str.format("Arccosine: acos(" + str(n) + ")"), t / limit2, "ms")
 
     # Arctangent
     n = DecimalNumber("1.2345")
@@ -185,16 +184,16 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit2):
         n3 = n.atan()
     t = get_time_ms() - t
-    print("{:<30}".format("Arctangent: atan(" + str(n) + ")"), t / limit2, "ms")
+    print(format_str.format("Arctangent: atan(" + str(n) + ")"), t / limit2, "ms")
 
     # 2-argument arctangent
-    n = DecimalNumber("1.23")
-    n2 = DecimalNumber("2.34")
+    n = DecimalNumber("2.3456")
+    n2 = DecimalNumber("1.2334")
     t = get_time_ms()
     for _ in range(0, limit2):
         n3 = DecimalNumber.atan2(n, n2)
     t = get_time_ms() - t
-    print("{:<30}".format("Arctangent2: atan2(" + str(n) + ", " + str(n2) + ")"), t / limit2, "ms")
+    print(format_str.format("Arctangent2: atan2(" + str(n) + ", " + str(n2) + ")"), t / limit2, "ms")
 
     # Exponential
     n = DecimalNumber("12.345")
@@ -202,7 +201,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit2):
         n3 = n.exp()
     t = get_time_ms() - t
-    print("{:<30}".format("Exponential: exp(" + str(n) + ")"), t / limit2, "ms")
+    print(format_str.format("Exponential: exp(" + str(n) + ")"), t / limit2, "ms")
 
     # Natural logarithm
     n = DecimalNumber("12.345")
@@ -210,7 +209,7 @@ def perf_decimal_number(limit1: int, limit2: int) -> None:
     for _ in range(0, limit2):
         n3 = n.exp()
     t = get_time_ms() - t
-    print("{:<30}".format("Natural logarithm: ln(" + str(n) + ")"), t / limit2, "ms")
+    print(format_str.format("Natural logarithm: ln(" + str(n) + ")"), t / limit2, "ms")
 
 def perf_decimal_number_pi() -> None:
     """Performance of the calculation of PI."""
@@ -224,15 +223,16 @@ def perf_decimal_number_pi() -> None:
     t = get_time_ms()
     pi = DecimalNumber.pi()
     t = get_time_ms() - t
-    print("{:<30}".format("Pi with " + str(pi_decimals) + " decimals:"), t/1000, "s")
+    print(format_str.format("Pi with " + str(pi_decimals) + " decimals:"), t/1000, "s")
     print(pi)
     DecimalNumber.set_scale(current_scale)
 
 def print_title(title: str) -> None:
     """Auxiliary function to print a title."""
+    line: str = '+' + ('-' * 73) + '+'
     print("")
     print(line)
-    print("|  " + "{:<59}".format(title) + "  |")
+    print("|  " + "{:<69}".format(title) + "  |")
     print(line)
 
 
