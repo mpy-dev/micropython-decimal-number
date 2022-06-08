@@ -1400,7 +1400,7 @@ if __name__ == "__main__":
             if failed:
                 failed_counter += 1
 
-    print("Tests ran:", test.test_counter)
+    print("Tests run:", test.test_counter)
     if failed_counter == 0:
         print("Result:", "OK")
     elif failed_counter == 1:
